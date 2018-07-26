@@ -1,20 +1,18 @@
 package application;
-	
-import java.awt.Button;
-import java.awt.Insets;
-import java.awt.TextField;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.stage.Stage;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 
 public class Main extends Application 
@@ -55,13 +53,13 @@ public class Main extends Application
 
         //Quantity input
         quantityInput = new TextField();
-        quantityInput.set //setPromptText("Quantity");
+        quantityInput.setPromptText("Quantity");
 
         //Button
         Button addButton = new Button("Add");
-        addButton.addActionListener(e -> addButtonClicked()); //setOnAction(e -> addButtonClicked());
+        addButton.setOnAction(e -> addButtonClicked()); //setOnAction(e -> addButtonClicked());
         Button deleteButton = new Button("Delete");
-        deleteButton.addActionListener(e -> deleteButtonClicked());
+        deleteButton.setOnAction(e -> deleteButtonClicked());
 
         HBox hBox = new HBox();
         hBox.setPadding(new Insets(10,10,10,10));
@@ -101,7 +99,7 @@ public class Main extends Application
         Tabellenelected.forEach(allTabellen::remove);
     }
 
-    //Get all of the Tabellen
+    //Einfügen der Anfangswerte in die Tabelle
     public ObservableList<Tabelle> getTabelle(){
         ObservableList<Tabelle> Tabellen = FXCollections.observableArrayList();
         Tabellen.add(new Tabelle("Laptop", 859.00, 20));
