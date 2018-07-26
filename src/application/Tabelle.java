@@ -1,45 +1,58 @@
 package application;
 
 public class Tabelle {
-
-    private String name;
-    private double price;
-    private int quantity;
+	
+	static int nr;
+    private String titel;
+    private String interpret;
+    private String genre;
 
     public Tabelle(){
-        this.name = "";
-        this.price = 0;
-        this.quantity = 0;
+    	nr = 0;
+        this.titel = "";
+        this.interpret = "";
+        this.genre = "";
     }
 
-    public Tabelle(String name, double price, int quantity){
-        this.name = name;
-        this.price = price;
-        this.quantity = quantity;
+    public Tabelle(String titel, String interpret, String genre){
+        this.titel = titel;
+        this.interpret = interpret;
+        this.genre = genre;
+        nr++;
     }
 
-    public String getName() {
-        return name;
+    public String getTitel() {
+        return titel;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitel(String titel) {
+        this.titel = titel;
     }
 
-    public double getPrice() {
-        return price;
+    public String getInterpret() {
+        return interpret;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setInterpret(String interpret) {
+        this.interpret = interpret;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public String getGenre() {
+        return genre;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
+
+	public int getNr()
+	{
+		return nr;
+	}
+
+	public void setNr(int nr)
+	{
+		this.nr = nr;
+	}
 
 }

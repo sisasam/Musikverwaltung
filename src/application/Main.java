@@ -10,6 +10,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -18,95 +19,147 @@ import javafx.stage.Stage;
 public class Main extends Application 
 {
 	Stage window;
-    TableView<Tabelle> table;
-    TextField nameInput, priceInput, quantityInput;
+    TableView<Tabelle> neuTabelle;
+    TextField titleEingabe, interEingabe, genreEingabe;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception
 	{
 		window = primaryStage;
-        window.setTitle("thenewboston - JavaFX");
+        window.setTitle("Musikverwaltung");
+        window.setMinHeight(550);
+        window.setMinWidth(900);
+        
+        //Nr Spalte
+        TableColumn<Tabelle, String> nrSpalte = new TableColumn<>("Nr.");
+        nrSpalte.setPrefWidth(70);	//bevorzugte Spaltenbreite
+        nrSpalte.setMinWidth(50);	//minimale Spaltenbreite
+        nrSpalte.setMaxWidth(150);	//maximale Spaltenbreite
+        nrSpalte.setCellValueFactory(new PropertyValueFactory<>("nr"));
 
-        //Name column
-        TableColumn<Tabelle, String> nameColumn = new TableColumn<>("Name");
-        nameColumn.setMinWidth(200);
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        //Titel Spalte
+        TableColumn<Tabelle, String> titelSpalte = new TableColumn<>("Titel");
+        titelSpalte.setPrefWidth(70);	//bevorzugte Spaltenbreite
+        titelSpalte.setMinWidth(50);	//minimale Spaltenbreite
+        titelSpalte.setMaxWidth(150);	//maximale Spaltenbreite
+        titelSpalte.setCellValueFactory(new PropertyValueFactory<>("titel"));
 
-        //Price column
-        TableColumn<Tabelle, Double> priceColumn = new TableColumn<>("Price");
-        priceColumn.setMinWidth(100);
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        //Interpreten Spalte
+        TableColumn<Tabelle, Double> interpretenSpalte = new TableColumn<>("Interpret");
+        interpretenSpalte.setPrefWidth(70);	//bevorzugte Spaltenbreite
+        interpretenSpalte.setMinWidth(50);	//minimale Spaltenbreite
+        interpretenSpalte.setMaxWidth(150);	//maximale Spaltenbreite
+        interpretenSpalte.setCellValueFactory(new PropertyValueFactory<>("interpret"));
 
-        //Quantity column
-        TableColumn<Tabelle, String> quantityColumn = new TableColumn<>("Quantity");
-        quantityColumn.setMinWidth(100);
-        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        //Genre Spalte
+        TableColumn<Tabelle, String> genreSpalte = new TableColumn<>("Genre");
+        genreSpalte.setPrefWidth(70);	//bevorzugte Spaltenbreite
+        genreSpalte.setMinWidth(50);	//minimale Spaltenbreite
+        genreSpalte.setMaxWidth(150);	//maximale Spaltenbreite
+        genreSpalte.setCellValueFactory(new PropertyValueFactory<>("genre"));
 
-        //Name input
-        nameInput = new TextField();
-        nameInput.setPromptText("Name");
-        nameInput.setMinWidth(100);
+        //Titel Eingabe
+        titleEingabe = new TextField();
+        titleEingabe.setPromptText("Title");
+        titleEingabe.setMinWidth(100);
 
-        //Price input
-        priceInput = new TextField();
-        priceInput.setPromptText("Price");
+        //Interpreten Eingabe
+        interEingabe = new TextField();
+        interEingabe.setPromptText("Interpret");
 
-        //Quantity input
-        quantityInput = new TextField();
-        quantityInput.setPromptText("Quantity");
+        //Genre Eingabe
+        genreEingabe = new TextField();
+        genreEingabe.setPromptText("Genre");
 
         //Button
-        Button addButton = new Button("Add");
-        addButton.setOnAction(e -> addButtonClicked()); //setOnAction(e -> addButtonClicked());
-        Button deleteButton = new Button("Delete");
+        Button addButton = new Button("Hinzufügen");
+        addButton.setOnAction(e -> addButtonClicked());
+        Button deleteButton = new Button("Löschen");
         deleteButton.setOnAction(e -> deleteButtonClicked());
+        Button vModButton = new Button("Verwaltungsmodus");
+        vModButton.setOnAction(e -> vModButtonClicked());
+        Button bModButton = new Button("Benutzermodus");
+        bModButton.setOnAction(e -> bModButtonClicked());
 
-        HBox hBox = new HBox();
-        hBox.setPadding(new Insets(10,10,10,10));
-        hBox.setSpacing(10);
-        hBox.getChildren().addAll(nameInput, priceInput, quantityInput, addButton, deleteButton);
+        //Layout für die Eingabe
+        HBox eingLayout = new HBox();
+        eingLayout.setPadding(new Insets(10,10,10,10));
+        eingLayout.setSpacing(10);
+        eingLayout.getChildren().addAll(titleEingabe, interEingabe, genreEingabe, addButton, deleteButton);
 
-        table = new TableView<>();
-        table.setItems(getTabelle());
-        table.getColumns().addAll(nameColumn, priceColumn, quantityColumn);
+        //Tabelle erstellen
+        neuTabelle = new TableView<>();
+        neuTabelle.setPrefWidth(210);
+        neuTabelle.setItems(getTabelle());
+        neuTabelle.getColumns().addAll(nrSpalte, titelSpalte, interpretenSpalte, genreSpalte);
 
-        VBox vBox = new VBox();
-        vBox.getChildren().addAll(table, hBox);
+        //Layout für die Tabelle
+        VBox tabLayout = new VBox();
+        tabLayout.getChildren().addAll(neuTabelle);
+        
+        //Layout für die Mod Switches
+        HBox modLayout = new HBox();
+        modLayout.getChildren().addAll(vModButton, bModButton);
+        
+        //Main Layout
+        BorderPane mainLayout = new BorderPane();
+        mainLayout.setTop(modLayout);
+        mainLayout.setLeft(tabLayout);
+        mainLayout.setBottom(eingLayout);
 
-        Scene scene = new Scene(vBox);
+        Scene scene = new Scene(mainLayout);
         window.setScene(scene);
         window.show();
     }
 
-    //Add button clicked
+    //Hinzufügen Button
+	/*
+	 * Man kann hier mit der If Abfrage noch einfügen, dass er das leere Feld rot highlighted !
+	 */
     public void addButtonClicked(){
-        Tabelle Tabelle = new Tabelle();
-        Tabelle.setName(nameInput.getText());
-        Tabelle.setPrice(Double.parseDouble(priceInput.getText()));
-        Tabelle.setQuantity(Integer.parseInt(quantityInput.getText()));
-        table.getItems().add(Tabelle);
-        nameInput.clear();
-        priceInput.clear();
-        quantityInput.clear();
+    	if(!titleEingabe.getText().isEmpty() && !interEingabe.getText().isEmpty() && !genreEingabe.getText().isEmpty() )
+        {
+    		Tabelle tabelle = new Tabelle();
+    		tabelle.setTitel(titleEingabe.getText());
+    		tabelle.setInterpret(interEingabe.getText());
+    		tabelle.setGenre(genreEingabe.getText());
+    		neuTabelle.getItems().add(tabelle);
+    		titleEingabe.clear();
+    		interEingabe.clear();
+    		genreEingabe.clear();
+    	}
     }
 
-    //Delete button clicked
+    //Löschen Button
     public void deleteButtonClicked(){
         ObservableList<Tabelle> Tabellenelected, allTabellen;
-        allTabellen = table.getItems();
-        Tabellenelected = table.getSelectionModel().getSelectedItems();
+        allTabellen = neuTabelle.getItems();
+        Tabellenelected = neuTabelle.getSelectionModel().getSelectedItems();
 
         Tabellenelected.forEach(allTabellen::remove);
     }
+    
+    //Verwaltungs Button
+    public void vModButtonClicked()
+    {
+    	
+    }
+    
+    //Benutzer Button
+    public void bModButtonClicked()
+    {
+    	
+    }
+    
 
     //Einfügen der Anfangswerte in die Tabelle
     public ObservableList<Tabelle> getTabelle(){
         ObservableList<Tabelle> Tabellen = FXCollections.observableArrayList();
-        Tabellen.add(new Tabelle("Laptop", 859.00, 20));
-        Tabellen.add(new Tabelle("Bouncy Ball", 2.49, 198));
-        Tabellen.add(new Tabelle("Toilet", 99.00, 74));
-        Tabellen.add(new Tabelle("The Notebook DVD", 19.99, 12));
-        Tabellen.add(new Tabelle("Corn", 1.49, 856));
+        Tabellen.add(new Tabelle("Justin Bieber", "Baby", "Dreck"));
+        Tabellen.add(new Tabelle("Justin Bieber", "Baby", "Müll"));
+        Tabellen.add(new Tabelle("Justin Bieber", "Baby", "Scheiß"));
+        Tabellen.add(new Tabelle("Justin Bieber", "Baby", "Ohrenkrebs"));
+        Tabellen.add(new Tabelle("Justin Bieber", "Baby", "Lieber Eier in Piranhabecken hängen"));
         return Tabellen;
     }
 	
