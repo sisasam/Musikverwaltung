@@ -2,10 +2,11 @@ package application;
 
 public class Tabelle {
 	
-	static int nr;
+	private int nr;
     private String titel;
     private String interpret;
     private String genre;
+    private String path;
 
     public Tabelle(){
     	nr = 0;
