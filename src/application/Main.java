@@ -65,15 +65,6 @@ public class Main extends Application
         pathEingabe.setPromptText("Geben Sie den Path der Musikdatei ein, Bsp.: C:\\Users\\...\\Musik\\Bsp.mp3");
         pathEingabe.setMinWidth(300);
 
-        //Die beinden Eingaben werden nicht mehr gebraucht, da die Informationen automatisch von den MP3's geladen wird
-//        //Interpreten Eingabe
-//        interEingabe = new TextField();
-//        interEingabe.setPromptText("Interpret");
-//
-//        //Genre Eingabe
-//        genreEingabe = new TextField();
-//        genreEingabe.setPromptText("Genre");
-
         //Button
         // Die Exceptions müssen noch behandelt werden. + Entscheidung ob die Eingabe vom Path die Lösung ist.
         Button addButton = new Button("Hinzufügen");
