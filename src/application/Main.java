@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -124,8 +125,9 @@ public class Main extends Application
         tabLayout.setPadding(new Insets(10,10,10,10));
         
         //Layout für die Mod Switches
-        HBox modLayout = new HBox();
-        modLayout.getChildren().addAll(bModButton); //vModButton,
+        Label labelVerwaltungsmodus = new Label("Verwaltungsmodus");
+        VBox modLayout = new VBox();
+        modLayout.getChildren().addAll(labelVerwaltungsmodus,bModButton); //vModButton,
         
         //Main Layout
         BorderPane mainLayout = new BorderPane();
@@ -139,26 +141,51 @@ public class Main extends Application
         window.setScene(verwaltungsModus);
         window.show();
 
-        /* Benutzermodus */
+        /*
+        *** Benutzermodus *
+        *********************
+        ***
+        *
+        */
+
         BorderPane playerLayout = new BorderPane();
 
-        VBox layout2 = new VBox(10);
-        //Playaerelemente
-        HBox playerSteuerung = new HBox(40);
-        Button skipBack = new Button("Zurück");
-        Button play = new Button("Abspielen");
-        Button skipForward = new Button("Nächster");
-        playerSteuerung.getChildren().addAll(skipBack,play,skipForward);
-
-        playerLayout.setBottom(playerSteuerung);
+        VBox modLayout2 = new VBox(10);
+        modLayout2.setPadding(new Insets(5, 5, 5, 5));
 
         //Linke Seite Benutzermodus
         Label labelBenutzermodus = new Label("Benutzermodus");
         Button button2 = new Button("Zum Verwaltungsmodus");
         button2.setOnAction(e -> window.setScene(verwaltungsModus));
-        layout2.getChildren().addAll(labelBenutzermodus,button2);
+        //Liste der Playlists
+        Label playlistAuswahlLabel = new Label("Plalist auswählen:");
+        ListView<String> playListView = new ListView<String>(); //Datentyp anpassen!
+        playListView.getItems().addAll("Testliste1","Testliste2", "Testliste3","Testliste4");
+        playListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        //Button für Playlist
+        Button playlistAuswahl = new Button("Playlist verwenden");
+        playlistAuswahl.setOnAction(event -> {                       //!!! Funktion fehlt!
+            playlistAuswahlClicked();
+            System.out.println("Funktion für Playlist Wahl!");
+        });
+        playerLayout.getChildren().addAll(playListView);
 
-        playerLayout.setLeft(layout2);
+        modLayout2.getChildren().addAll(labelBenutzermodus,button2,playlistAuswahlLabel,playListView,playlistAuswahl);
+
+        playerLayout.setLeft(modLayout2);
+
+        //Playaerelemente in horizontaler Anordnung
+        HBox playerSteuerung = new HBox(40);
+        playerSteuerung.setPadding(new Insets(5, 5, 5, 5));
+        //Player buttons
+        Button skipBack = new Button("Zurück");
+        Button play = new Button("Abspielen");
+        Button skipForward = new Button("Nächster");
+        playerSteuerung.getChildren().addAll(skipBack,play,skipForward);
+        playerLayout.setBottom(playerSteuerung);
+        playerLayout.setAlignment(playerSteuerung, Pos.BOTTOM_CENTER);        // Playelemente Position
+
+
 
         benutzerModus = new Scene(playerLayout, 1024, 600);
 
@@ -200,16 +227,18 @@ public class Main extends Application
     /*
     public void vModButtonClicked()
     {
-
     }
     
     //Benutzer Button
     public void bModButtonClicked()
     {
-    	;
     }
     */
-
+    private void playlistAuswahlClicked()
+    {
+        ObservableList<String> auswahl;
+        System.out.println("Boom");
+    }
     //Einfügen der Anfangswerte in die Tabelle
     public ObservableList<Tabelle> getTabelle()
     {
