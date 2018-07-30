@@ -8,13 +8,24 @@ import interfaces.Song;
 
 public class TitelEinbinden 
 {
-	public static void main(String[] args) throws IOException, TagException 
+	public TitelEinbinden()
 	{
+		
+	}
+	
+	public Tabelle einbinden(String path) throws IOException, TagException 
+	{
+		Tabelle table = new Tabelle();
 		String title = new String();
-		Song song = new Song("C:"+File.separator+"Users"+File.separator+"tarnd"+File.separator+"git"+File.separator+"Musik"+File.separator+"NikFos.mp3");
+		Song song = new Song(path);
+		
 		title = song.getTitle();
-		System.out.println(title);
+		table.setTitel(title);
 		String genre = song.getGenre();
-		System.out.println(genre);
+		table.setGenre(genre);
+		String inter = song.getInterpret();
+		table.setInterpret(inter);
+		
+		return table;
 	}
 }
