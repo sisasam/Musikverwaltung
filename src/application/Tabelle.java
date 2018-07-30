@@ -3,7 +3,6 @@ package application;
 public class Tabelle 
 {
 	
-	private int nr;
     private String titel;
     private String interpret;
     private String genre;
@@ -11,7 +10,6 @@ public class Tabelle
 
     public Tabelle()
     {
-    	nr = 0;
         this.titel = "";
         this.interpret = "";
         this.genre = "";
@@ -22,7 +20,6 @@ public class Tabelle
         this.titel = titel;
         this.interpret = interpret;
         this.genre = genre;
-        this.nr = nr++;
     }
     
     public Tabelle(String[] infos)
@@ -31,7 +28,6 @@ public class Tabelle
       this.interpret = infos[1];
       this.genre = infos[2];
       this.setPath(infos[3]);
-      this.nr = nr++;
     }
 
     public String getTitel() 
@@ -63,16 +59,6 @@ public class Tabelle
     {
         this.genre = genre;
     }
-
-	public int getNr()
-	{
-		return nr;
-	}
-
-	public void setNr(int nr)
-	{
-		this.nr = nr;
-	}
 
 	public String getPath()
 	{

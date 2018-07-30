@@ -31,21 +31,6 @@ public class Main extends Application
         window.setTitle("Musikverwaltung");
         window.setMinHeight(600);
         window.setMinWidth(1024);
-        
-        //Nr Spalte
-        TableColumn<Tabelle, String> nrSpalte = new TableColumn<>("Nr.");
-        nrSpalte.setPrefWidth(20);	//bevorzugte Spaltenbreite
-        nrSpalte.setMinWidth(20);	//minimale Spaltenbreite
-        nrSpalte.setMaxWidth(30);	//maximale Spaltenbreite
-        nrSpalte.setCellValueFactory(new PropertyValueFactory<>("nr"));
-
-        //Nr Spalte2
-        TableColumn<Tabelle, String> nrSpalte2 = new TableColumn<>("Nr.");
-        nrSpalte2.setPrefWidth(20);	//bevorzugte Spaltenbreite
-        nrSpalte2.setMinWidth(20);	//minimale Spaltenbreite
-        nrSpalte2.setMaxWidth(30);	//maximale Spaltenbreite
-        nrSpalte2.setCellValueFactory(new PropertyValueFactory<>("nr"));
-
 
         //Titel Spalte
         TableColumn<Tabelle, String> titelSpalte = new TableColumn<>("Titel");
@@ -119,6 +104,10 @@ public class Main extends Application
         deleteButton.setOnAction(e -> deleteButtonClicked());
         Button bModButton = new Button("Zum Benutzermodus");    //Um in Benutzer zu gelangen = bMod
         bModButton.setOnAction(e -> window.setScene(benutzerModus));
+        Button inDiePlaylist = new Button("In die Playlist");
+        inDiePlaylist.setOnAction(e -> inDiePlaylistClicked());
+        Button ausDerPlaylist = new Button("Aus der Playlist");
+        ausDerPlaylist.setOnAction(e -> ausDerPlaylistClicked());
 
         //Layout für die Eingabe
         HBox eingLayout = new HBox();
@@ -130,11 +119,11 @@ public class Main extends Application
         neuTabelle = new TableView<>();
 //        neuTabelle.setPrefWidth(300); //Sollte ich das rein nehmen?
         neuTabelle.setItems(getTabelle());
-        neuTabelle.getColumns().addAll(nrSpalte, titelSpalte, interpretenSpalte, genreSpalte);
+        neuTabelle.getColumns().addAll(titelSpalte, interpretenSpalte, genreSpalte);
         
         playlist1 = new TableView<>();
-        playlist1.setItems(getTabelle());
-        playlist1.getColumns().addAll(nrSpalte, titelSpalte, interpretenSpalte, genreSpalte);
+//        playlist1.setItems(getTabelle());
+        playlist1.getColumns().addAll(titelSpalte2, interpretenSpalte2, genreSpalte2);
         
         
 
@@ -148,12 +137,20 @@ public class Main extends Application
         VBox modLayout = new VBox();
         modLayout.getChildren().addAll(labelVerwaltungsmodus,bModButton); //vModButton,
         
+        VBox playlistSwitcher = new VBox();
+        playlistSwitcher.getChildren().addAll(ausDerPlaylist, inDiePlaylist);
+        playlistSwitcher.setAlignment(Pos.CENTER);
+        playlistSwitcher.setPadding(new Insets(10, 10, 10, 10));
+        playlistSwitcher.setSpacing(10);
+        
+        
         //Main Layout
         BorderPane mainLayout = new BorderPane();
         mainLayout.setTop(modLayout);
         mainLayout.setRight(playlist1);
         mainLayout.setBottom(eingLayout);
         mainLayout.setLeft(neuTabelle);
+        mainLayout.setCenter(playlistSwitcher);
 
         verwaltungsModus = new Scene(mainLayout,1024,600);
 
@@ -184,7 +181,8 @@ public class Main extends Application
         playListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         //Button für Playlist
         Button playlistAuswahl = new Button("Playlist verwenden");
-        playlistAuswahl.setOnAction(event -> {                       //!!! Funktion fehlt!
+        playlistAuswahl.setOnAction(event -> {
+        	// TODO Funktion fehlt!!
             playlistAuswahlClicked();
             System.out.println("Funktion für Playlist Wahl!");
         });
@@ -211,7 +209,27 @@ public class Main extends Application
 
     }
 
-    //Hinzufügen Button
+    private void inDiePlaylistClicked()
+	{
+		// TODO von der Liste in die Playlist übernehmen. (Funktioniert noch nicht. AAAAAber fast.)
+    	ObservableList<Tabelle> Tabellenelected, allTabellen;
+        allTabellen = neuTabelle.getItems();
+        Tabellenelected = neuTabelle.getSelectionModel().getSelectedItems();
+        
+        playlist1.setItems(Tabellenelected);
+	}
+
+	private void ausDerPlaylistClicked()
+	{
+		// TODO Die Funktion bearbeiten, (aktuell nur gleiche Fkt. wie Löschen Button)
+		 ObservableList<Tabelle> Tabellenelected, allTabellen;
+	        allTabellen = playlist1.getItems();
+	        Tabellenelected = playlist1.getSelectionModel().getSelectedItems();
+
+	        Tabellenelected.forEach(allTabellen::remove);
+	}
+
+	//Hinzufügen Button
 	/*
 	 * Man kann hier mit der If Abfrage noch einfügen, dass er das leere Feld rot highlighted !
 	 */
@@ -222,14 +240,8 @@ public class Main extends Application
     		TitelEinbinden eingabe = new TitelEinbinden();
     		Tabelle tabelle = new Tabelle();
     		String path = pathEingabe.getText();
-
-//    		tabelle.setTitel(pathEingabe.getText());
-//    		tabelle.setInterpret(interEingabe.getText());
-//    		tabelle.setGenre(genreEingabe.getText());
-            playlist1.getItems().add(eingabe.einbinden(path));
+            neuTabelle.getItems().add(eingabe.einbinden(path));
     		pathEingabe.clear();
-//    		interEingabe.clear();
-//    		genreEingabe.clear();
     	}
     }
 
@@ -237,28 +249,18 @@ public class Main extends Application
     public void deleteButtonClicked()
     {
         ObservableList<Tabelle> Tabellenelected, allTabellen;
-        allTabellen = playlist1.getItems();
-        Tabellenelected = playlist1.getSelectionModel().getSelectedItems();
+        allTabellen = neuTabelle.getItems();
+        Tabellenelected = neuTabelle.getSelectionModel().getSelectedItems();
 
         Tabellenelected.forEach(allTabellen::remove);
     }
     
-    //Verwaltungs Button
-    /*
-    public void vModButtonClicked()
-    {
-    }
-    
-    //Benutzer Button
-    public void bModButtonClicked()
-    {
-    }
-    */
     private void playlistAuswahlClicked()
     {
         ObservableList<String> auswahl;
         System.out.println("Boom");
     }
+    
     //Einfügen der Anfangswerte in die Tabelle
     public ObservableList<Tabelle> getTabelle()
     {
@@ -268,10 +270,10 @@ public class Main extends Application
         tabellen.add(new Tabelle("Justin Bieber", "Baby", "Scheiß"));
         tabellen.add(new Tabelle("Justin Bieber", "Baby", "Ohrenkrebs"));
         tabellen.add(new Tabelle("Justin Bieber", "Baby", "Lieber Eier in Piranhabecken hängen"));
-//        Tabellen.add(new Tabelle(TitelEinbinden.einbinden()));
         return tabellen;
     }
 
+    // Wird im Moment noch nicht verwendet --- Funktion eventuell für automatisches Erstellen aller Songs
     public ObservableList<Tabelle> getPlaylist(String path) throws IOException, TagException
     {
         TitelEinbinden ein = new TitelEinbinden();
