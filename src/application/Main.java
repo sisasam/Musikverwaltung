@@ -17,17 +17,17 @@ import java.io.IOException;
 
 public class Main extends Application 
 {
-	Stage verwaltungsModus,benutzerModus;
+	Stage verwaltungsmodus,benutzermodus;
     TableView<Tabelle> neuTabelle, playlist1;
     TextField pathEingabe;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception
 	{
-		verwaltungsModus = primaryStage;
-        verwaltungsModus.setTitle("Musikverwaltung");
-        verwaltungsModus.setMinHeight(600);
-        verwaltungsModus.setMinWidth(1024);
+		verwaltungsmodus = primaryStage;
+        verwaltungsmodus.setTitle("Musikverwaltung");
+        verwaltungsmodus.setMinHeight(600);
+        verwaltungsmodus.setMinWidth(1024);
         
         //Nr Spalte
         TableColumn<Tabelle, String> nrSpalte = new TableColumn<>("Nr.");
@@ -133,8 +133,8 @@ public class Main extends Application
         mainLayout.setBottom(eingLayout);
 
         Scene scene = new Scene(mainLayout);
-        verwaltungsModus.setScene(scene);
-        verwaltungsModus.show();
+        verwaltungsmodus.setScene(scene);
+        verwaltungsmodus.show();
     }
 
     //Hinzufügen Button
