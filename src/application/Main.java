@@ -39,12 +39,28 @@ public class Main extends Application
         nrSpalte.setMaxWidth(30);	//maximale Spaltenbreite
         nrSpalte.setCellValueFactory(new PropertyValueFactory<>("nr"));
 
+        //Nr Spalte2
+        TableColumn<Tabelle, String> nrSpalte2 = new TableColumn<>("Nr.");
+        nrSpalte2.setPrefWidth(20);	//bevorzugte Spaltenbreite
+        nrSpalte2.setMinWidth(20);	//minimale Spaltenbreite
+        nrSpalte2.setMaxWidth(30);	//maximale Spaltenbreite
+        nrSpalte2.setCellValueFactory(new PropertyValueFactory<>("nr"));
+
+
         //Titel Spalte
         TableColumn<Tabelle, String> titelSpalte = new TableColumn<>("Titel");
         titelSpalte.setPrefWidth(100);	//bevorzugte Spaltenbreite
         titelSpalte.setMinWidth(50);	//minimale Spaltenbreite
         titelSpalte.setMaxWidth(150);	//maximale Spaltenbreite
         titelSpalte.setCellValueFactory(new PropertyValueFactory<>("titel"));
+
+        //Titel Spalte
+        TableColumn<Tabelle, String> titelSpalte2 = new TableColumn<>("Titel");
+        titelSpalte2.setPrefWidth(100);	//bevorzugte Spaltenbreite
+        titelSpalte2.setMinWidth(50);	//minimale Spaltenbreite
+        titelSpalte2.setMaxWidth(150);	//maximale Spaltenbreite
+        titelSpalte2.setCellValueFactory(new PropertyValueFactory<>("titel"));
+
 
         //Interpreten Spalte
         TableColumn<Tabelle, Double> interpretenSpalte = new TableColumn<>("Interpret");
@@ -53,12 +69,24 @@ public class Main extends Application
         interpretenSpalte.setMaxWidth(150);	//maximale Spaltenbreite
         interpretenSpalte.setCellValueFactory(new PropertyValueFactory<>("interpret"));
 
+        //Interpreten Spalte
+        TableColumn<Tabelle, Double> interpretenSpalte2 = new TableColumn<>("Interpret");
+        interpretenSpalte2.setPrefWidth(100);	//bevorzugte Spaltenbreite
+        interpretenSpalte2.setMinWidth(50);	//minimale Spaltenbreite
+        interpretenSpalte2.setMaxWidth(150);	//maximale Spaltenbreite
+        interpretenSpalte2.setCellValueFactory(new PropertyValueFactory<>("interpret"));
         //Genre Spalte
         TableColumn<Tabelle, String> genreSpalte = new TableColumn<>("Genre");
         genreSpalte.setPrefWidth(170);	//bevorzugte Spaltenbreite
         genreSpalte.setMinWidth(50);	//minimale Spaltenbreite
         genreSpalte.setMaxWidth(150);	//maximale Spaltenbreite
         genreSpalte.setCellValueFactory(new PropertyValueFactory<>("genre"));
+        //Genre Spalte2
+        TableColumn<Tabelle, String> genreSpalte2 = new TableColumn<>("Genre");
+        genreSpalte2.setPrefWidth(170);	//bevorzugte Spaltenbreite
+        genreSpalte2.setMinWidth(50);	//minimale Spaltenbreite
+        genreSpalte2.setMaxWidth(150);	//maximale Spaltenbreite
+        genreSpalte2.setCellValueFactory(new PropertyValueFactory<>("genre"));
 
         //Titel Eingabe
         pathEingabe = new TextField();
@@ -123,8 +151,9 @@ public class Main extends Application
         //Main Layout
         BorderPane mainLayout = new BorderPane();
         mainLayout.setTop(modLayout);
-        mainLayout.setLeft(tabLayout);
+        mainLayout.setRight(playlist1);
         mainLayout.setBottom(eingLayout);
+        mainLayout.setLeft(neuTabelle);
 
         verwaltungsModus = new Scene(mainLayout,1024,600);
 
@@ -193,11 +222,11 @@ public class Main extends Application
     		TitelEinbinden eingabe = new TitelEinbinden();
     		Tabelle tabelle = new Tabelle();
     		String path = pathEingabe.getText();
-    		
+
 //    		tabelle.setTitel(pathEingabe.getText());
 //    		tabelle.setInterpret(interEingabe.getText());
 //    		tabelle.setGenre(genreEingabe.getText());
-    		neuTabelle.getItems().add(eingabe.einbinden(path));
+            playlist1.getItems().add(eingabe.einbinden(path));
     		pathEingabe.clear();
 //    		interEingabe.clear();
 //    		genreEingabe.clear();
@@ -208,8 +237,8 @@ public class Main extends Application
     public void deleteButtonClicked()
     {
         ObservableList<Tabelle> Tabellenelected, allTabellen;
-        allTabellen = neuTabelle.getItems();
-        Tabellenelected = neuTabelle.getSelectionModel().getSelectedItems();
+        allTabellen = playlist1.getItems();
+        Tabellenelected = playlist1.getSelectionModel().getSelectedItems();
 
         Tabellenelected.forEach(allTabellen::remove);
     }
@@ -242,14 +271,14 @@ public class Main extends Application
 //        Tabellen.add(new Tabelle(TitelEinbinden.einbinden()));
         return tabellen;
     }
-    
-//    public ObservableList<Tabelle> getPlaylist()
-//    {
-//    	TitelEinbinden ein = new TitelEinbinden();
-//    	ObservableList<Tabelle> playlist = FXCollections.observableArrayList();
-//    	playlist.add(ein.einbinden(path))
-//    	return playlist
-//    }
+
+    public ObservableList<Tabelle> getPlaylist(String path) throws IOException, TagException
+    {
+        TitelEinbinden ein = new TitelEinbinden();
+        ObservableList<Tabelle> playlist = FXCollections.observableArrayList();
+        playlist.add(ein.einbinden(path));
+        return playlist;
+    }
 	
 	public static void main(String[] args) 
 	{
