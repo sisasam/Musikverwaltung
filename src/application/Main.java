@@ -152,7 +152,10 @@ public class Main extends Application
 //    		tabelle.setTitel(pathEingabe.getText());
 //    		tabelle.setInterpret(interEingabe.getText());
 //    		tabelle.setGenre(genreEingabe.getText());
-    		neuTabelle.getItems().add(eingabe.einbinden(path));
+//    		neuTabelle.getItems().add(eingabe.einbinden(path));
+    		tabelle.setTitel(eingabe.einbinden(path).getTitel());
+    		tabelle.setGenre(eingabe.einbinden(path).getGenre());
+    		tabelle.setInterpret(eingabe.einbinden(path).getInterpret());
     		pathEingabe.clear();
 //    		interEingabe.clear();
 //    		genreEingabe.clear();
@@ -191,17 +194,17 @@ public class Main extends Application
         tabellen.add(new Tabelle("Justin Bieber", "Baby", "Scheiﬂ"));
         tabellen.add(new Tabelle("Justin Bieber", "Baby", "Ohrenkrebs"));
         tabellen.add(new Tabelle("Justin Bieber", "Baby", "Lieber Eier in Piranhabecken h‰ngen"));
-//        Tabellen.add(new Tabelle(TitelEinbinden.einbinden()));
+//        tabellen.add(new Tabelle(TitelEinbinden.einbinden()));
         return tabellen;
     }
     
-//    public ObservableList<Tabelle> getPlaylist()
-//    {
-//    	TitelEinbinden ein = new TitelEinbinden();
-//    	ObservableList<Tabelle> playlist = FXCollections.observableArrayList();
-//    	playlist.add(ein.einbinden(path))
-//    	return playlist
-//    }
+    public ObservableList<Tabelle> getPlaylist(String path) throws IOException, TagException
+    {
+    	TitelEinbinden ein = new TitelEinbinden();
+    	ObservableList<Tabelle> playlist = FXCollections.observableArrayList();
+    	playlist.add(ein.einbinden(path));
+    	return playlist;
+    }
 	
 	public static void main(String[] args) 
 	{

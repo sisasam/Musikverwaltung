@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import org.farng.mp3.TagException;
 
+import backendapi.AdminModeApi;
 import interfaces.Song;
 
 public class TitelEinbinden 
@@ -15,9 +16,9 @@ public class TitelEinbinden
 	
 	public Tabelle einbinden(String path) throws IOException, TagException 
 	{
+		Song song = new Song(path);
 		Tabelle table = new Tabelle();
 		String title = new String();
-		Song song = new Song(path);
 		
 		title = song.getTitle();
 		table.setTitel(title);
