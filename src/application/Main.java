@@ -11,9 +11,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.farng.mp3.TagException;
+import javafx.scene.text.*;
 
+
+import java.beans.MethodDescriptor;
 import java.io.IOException;
 
 
@@ -23,7 +27,9 @@ public class Main extends Application
 	Scene verwaltungsModus, benutzerModus;
     TableView<Tabelle> neuTabelle, playlist1;
     TextField pathEingabe;
-	
+    Text MD, PL;
+    
+    
 	@Override
 	public void start(Stage primaryStage) throws Exception
 	{
@@ -31,19 +37,25 @@ public class Main extends Application
         window.setTitle("Musikverwaltung");
         window.setMinHeight(600);
         window.setMinWidth(1024);
+        
+        TableSetting TS = new TableSetting();
+        
+        //TODO das ersetzen des Spaltenlayouts mit neuer Klasse um weitere Playlisten hinzuzufügen
 
         //Titel Spalte
         TableColumn<Tabelle, String> titelSpalte = new TableColumn<>("Titel");
-        titelSpalte.setPrefWidth(100);	//bevorzugte Spaltenbreite
-        titelSpalte.setMinWidth(50);	//minimale Spaltenbreite
-        titelSpalte.setMaxWidth(150);	//maximale Spaltenbreite
+//        titelSpalte.setPrefWidth(100);	//bevorzugte Spaltenbreite
+//        titelSpalte.setMinWidth(50);	//minimale Spaltenbreite
+//        titelSpalte.setMaxWidth(150);	//maximale Spaltenbreite
+        TS.setting(titelSpalte);
         titelSpalte.setCellValueFactory(new PropertyValueFactory<>("titel"));
 
         //Titel Spalte
         TableColumn<Tabelle, String> titelSpalte2 = new TableColumn<>("Titel");
-        titelSpalte2.setPrefWidth(100);	//bevorzugte Spaltenbreite
-        titelSpalte2.setMinWidth(50);	//minimale Spaltenbreite
-        titelSpalte2.setMaxWidth(150);	//maximale Spaltenbreite
+//        titelSpalte2.setPrefWidth(100);	//bevorzugte Spaltenbreite
+//        titelSpalte2.setMinWidth(50);	//minimale Spaltenbreite
+//        titelSpalte2.setMaxWidth(150);	//maximale Spaltenbreite
+        TS.setting(titelSpalte);
         titelSpalte2.setCellValueFactory(new PropertyValueFactory<>("titel"));
 
 
@@ -125,12 +137,24 @@ public class Main extends Application
 //        playlist1.setItems(getTabelle());
         playlist1.getColumns().addAll(titelSpalte2, interpretenSpalte2, genreSpalte2);
         
+        //Musikdatenbank TEXT
+        MD = new Text();
+        MD.setText("Musikdatenbank");
+        MD.setFont(new Font(20));
         
+        PL = new Text();
+        PL.setText("Playlist");
+        PL.setFont(new Font(20));
 
         //Layout für die Tabelle
-        HBox tabLayout = new HBox();
-        tabLayout.getChildren().addAll(neuTabelle, playlist1);
+        VBox tabLayout = new VBox();
+        tabLayout.getChildren().addAll(MD, neuTabelle);
         tabLayout.setPadding(new Insets(10,10,10,10));
+        
+        //Layout für die Playlist
+        VBox plLayout = new VBox();
+        plLayout.getChildren().addAll(PL, playlist1);
+        plLayout.setPadding(new Insets(10,10,10,10));
         
         //Layout für die Mod Switches
         Label labelVerwaltungsmodus = new Label("Verwaltungsmodus");
@@ -147,9 +171,9 @@ public class Main extends Application
         //Main Layout
         BorderPane mainLayout = new BorderPane();
         mainLayout.setTop(modLayout);
-        mainLayout.setRight(playlist1);
+        mainLayout.setRight(plLayout);
         mainLayout.setBottom(eingLayout);
-        mainLayout.setLeft(neuTabelle);
+        mainLayout.setLeft(tabLayout);
         mainLayout.setCenter(playlistSwitcher);
 
         verwaltungsModus = new Scene(mainLayout,1024,600);
@@ -212,11 +236,20 @@ public class Main extends Application
     private void inDiePlaylistClicked()
 	{
 		// TODO von der Liste in die Playlist übernehmen. (Funktioniert noch nicht. AAAAAber fast.)
-    	ObservableList<Tabelle> Tabellenelected, allTabellen;
+    	ObservableList<Tabelle> Tabellenelected, allTabellen, Tabellenelected2, allTabellen2;
         allTabellen = neuTabelle.getItems();
         Tabellenelected = neuTabelle.getSelectionModel().getSelectedItems();
         
-        playlist1.setItems(Tabellenelected);
+        allTabellen2 = playlist1.getItems();
+        Tabellenelected2 = playlist1.getSelectionModel().getSelectedItems();
+        
+        Tabellenelected.forEach(allTabellen2::add);
+        
+        
+        
+        
+        
+        
 	}
 
 	private void ausDerPlaylistClicked()
@@ -274,12 +307,12 @@ public class Main extends Application
     }
 
     // Wird im Moment noch nicht verwendet --- Funktion eventuell für automatisches Erstellen aller Songs
-    public ObservableList<Tabelle> getPlaylist(String path) throws IOException, TagException
+    public ObservableList<Tabelle> getPlaylist(ObservableList<Tabelle> path) throws IOException, TagException
     {
-        TitelEinbinden ein = new TitelEinbinden();
-        ObservableList<Tabelle> playlist = FXCollections.observableArrayList();
-        playlist.add(ein.einbinden(path));
-        return playlist;
+//        TitelEinbinden ein = new TitelEinbinden();
+//        ObservableList<Tabelle> playlist = FXCollections.observableArrayList();
+//        playlist.add(ein.einbinden(path));
+        return path;
     }
 	
 	public static void main(String[] args) 
