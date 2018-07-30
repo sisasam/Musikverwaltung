@@ -37,6 +37,12 @@ public class Main extends Application
         nrSpalte.setMinWidth(20);	//minimale Spaltenbreite
         nrSpalte.setMaxWidth(30);	//maximale Spaltenbreite
         nrSpalte.setCellValueFactory(new PropertyValueFactory<>("nr"));
+      //Nr Spalte2
+        TableColumn<Tabelle, String> nrSpalte2 = new TableColumn<>("Nr.");
+        nrSpalte2.setPrefWidth(20);	//bevorzugte Spaltenbreite
+        nrSpalte2.setMinWidth(20);	//minimale Spaltenbreite
+        nrSpalte2.setMaxWidth(30);	//maximale Spaltenbreite
+        nrSpalte2.setCellValueFactory(new PropertyValueFactory<>("nr"));
 
         //Titel Spalte
         TableColumn<Tabelle, String> titelSpalte = new TableColumn<>("Titel");
@@ -44,6 +50,12 @@ public class Main extends Application
         titelSpalte.setMinWidth(50);	//minimale Spaltenbreite
         titelSpalte.setMaxWidth(150);	//maximale Spaltenbreite
         titelSpalte.setCellValueFactory(new PropertyValueFactory<>("titel"));
+      //Titel Spalte
+        TableColumn<Tabelle, String> titelSpalte2 = new TableColumn<>("Titel");
+        titelSpalte2.setPrefWidth(100);	//bevorzugte Spaltenbreite
+        titelSpalte2.setMinWidth(50);	//minimale Spaltenbreite
+        titelSpalte2.setMaxWidth(150);	//maximale Spaltenbreite
+        titelSpalte2.setCellValueFactory(new PropertyValueFactory<>("titel"));
 
         //Interpreten Spalte
         TableColumn<Tabelle, Double> interpretenSpalte = new TableColumn<>("Interpret");
@@ -51,6 +63,12 @@ public class Main extends Application
         interpretenSpalte.setMinWidth(50);	//minimale Spaltenbreite
         interpretenSpalte.setMaxWidth(150);	//maximale Spaltenbreite
         interpretenSpalte.setCellValueFactory(new PropertyValueFactory<>("interpret"));
+      //Interpreten Spalte
+        TableColumn<Tabelle, Double> interpretenSpalte2 = new TableColumn<>("Interpret");
+        interpretenSpalte2.setPrefWidth(100);	//bevorzugte Spaltenbreite
+        interpretenSpalte2.setMinWidth(50);	//minimale Spaltenbreite
+        interpretenSpalte2.setMaxWidth(150);	//maximale Spaltenbreite
+        interpretenSpalte2.setCellValueFactory(new PropertyValueFactory<>("interpret"));
 
         //Genre Spalte
         TableColumn<Tabelle, String> genreSpalte = new TableColumn<>("Genre");
@@ -58,20 +76,17 @@ public class Main extends Application
         genreSpalte.setMinWidth(50);	//minimale Spaltenbreite
         genreSpalte.setMaxWidth(150);	//maximale Spaltenbreite
         genreSpalte.setCellValueFactory(new PropertyValueFactory<>("genre"));
+      //Genre Spalte2
+        TableColumn<Tabelle, String> genreSpalte2 = new TableColumn<>("Genre");
+        genreSpalte2.setPrefWidth(170);	//bevorzugte Spaltenbreite
+        genreSpalte2.setMinWidth(50);	//minimale Spaltenbreite
+        genreSpalte2.setMaxWidth(150);	//maximale Spaltenbreite
+        genreSpalte2.setCellValueFactory(new PropertyValueFactory<>("genre"));
 
         //Titel Eingabe
         pathEingabe = new TextField();
         pathEingabe.setPromptText("Geben Sie den Path der Musikdatei ein, Bsp.: C:\\Users\\...\\Musik\\Bsp.mp3");
         pathEingabe.setMinWidth(300);
-
-        //Die beinden Eingaben werden nicht mehr gebraucht, da die Informationen automatisch von den MP3's geladen wird
-//        //Interpreten Eingabe
-//        interEingabe = new TextField();
-//        interEingabe.setPromptText("Interpret");
-//
-//        //Genre Eingabe
-//        genreEingabe = new TextField();
-//        genreEingabe.setPromptText("Genre");
 
         //Button
         // Die Exceptions müssen noch behandelt werden. + Entscheidung ob die Eingabe vom Path die Lösung ist.
@@ -83,6 +98,7 @@ public class Main extends Application
 			}
 			catch (IOException e1)
 			{
+				//Die machen nen Scheiß!!
 				Alert notFound = new Alert(Alert.AlertType.ERROR, "File Path not found");
 				
 				e1.printStackTrace();
@@ -108,30 +124,24 @@ public class Main extends Application
 
         //Tabelle erstellen
         neuTabelle = new TableView<>();
-//        neuTabelle.setPrefWidth(300); //Sollte ich das rein nehmen?
         neuTabelle.setItems(getTabelle());
         neuTabelle.getColumns().addAll(nrSpalte, titelSpalte, interpretenSpalte, genreSpalte);
         
         playlist1 = new TableView<>();
-        playlist1.setItems(getTabelle());
-        playlist1.getColumns().addAll(nrSpalte, titelSpalte, interpretenSpalte, genreSpalte);
+       // playlist1.setItems(getTabelle());
+        playlist1.getColumns().addAll(nrSpalte2, titelSpalte2, interpretenSpalte2, genreSpalte2);
         
-        
-
-        //Layout für die Tabelle
-        HBox tabLayout = new HBox();
-        tabLayout.getChildren().addAll(neuTabelle, playlist1);
-        tabLayout.setPadding(new Insets(10,10,10,10));
         
         //Layout für die Mod Switches
         HBox modLayout = new HBox();
-        modLayout.getChildren().addAll(bModButton); //vModButton,
+        modLayout.getChildren().addAll(bModButton);
         
         //Main Layout
         BorderPane mainLayout = new BorderPane();
         mainLayout.setTop(modLayout);
-        mainLayout.setLeft(tabLayout);
+        mainLayout.setLeft(neuTabelle);
         mainLayout.setBottom(eingLayout);
+        mainLayout.setRight(playlist1);
 
         verwaltungsModus = new Scene(mainLayout,1024,600);
 
@@ -175,14 +185,10 @@ public class Main extends Application
     		TitelEinbinden eingabe = new TitelEinbinden();
     		Tabelle tabelle = new Tabelle();
     		String path = pathEingabe.getText();
-    		
-//    		tabelle.setTitel(pathEingabe.getText());
-//    		tabelle.setInterpret(interEingabe.getText());
-//    		tabelle.setGenre(genreEingabe.getText());
-//    		neuTabelle.getItems().add(eingabe.einbinden(path));
     		tabelle.setTitel(eingabe.einbinden(path).getTitel());
     		tabelle.setGenre(eingabe.einbinden(path).getGenre());
     		tabelle.setInterpret(eingabe.einbinden(path).getInterpret());
+    		playlist1.getItems().add(tabelle);
     		pathEingabe.clear();
 //    		interEingabe.clear();
 //    		genreEingabe.clear();
@@ -193,26 +199,12 @@ public class Main extends Application
     public void deleteButtonClicked()
     {
         ObservableList<Tabelle> Tabellenelected, allTabellen;
-        allTabellen = neuTabelle.getItems();
-        Tabellenelected = neuTabelle.getSelectionModel().getSelectedItems();
+        allTabellen = playlist1.getItems();
+        Tabellenelected = playlist1.getSelectionModel().getSelectedItems();
 
         Tabellenelected.forEach(allTabellen::remove);
     }
     
-    //Verwaltungs Button
-    /*
-    public void vModButtonClicked()
-    {
-
-    }
-    
-    //Benutzer Button
-    public void bModButtonClicked()
-    {
-    	;
-    }
-    */
-
     //Einfügen der Anfangswerte in die Tabelle
     public ObservableList<Tabelle> getTabelle()
     {
