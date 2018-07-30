@@ -1,39 +1,33 @@
 package application;
 
-import java.io.IOException;
-
-import org.farng.mp3.TagException;
-
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.farng.mp3.TagException;
+
+import java.io.IOException;
 
 
 public class Main extends Application 
 {
-	Stage window;
+	Stage verwaltungsmodus,benutzermodus;
     TableView<Tabelle> neuTabelle, playlist1;
     TextField pathEingabe;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception
 	{
-		window = primaryStage;
-        window.setTitle("Musikverwaltung");
-        window.setMinHeight(600);
-        window.setMinWidth(1024);
+		verwaltungsmodus = primaryStage;
+        verwaltungsmodus.setTitle("Musikverwaltung");
+        verwaltungsmodus.setMinHeight(600);
+        verwaltungsmodus.setMinWidth(1024);
         
         //Nr Spalte
         TableColumn<Tabelle, String> nrSpalte = new TableColumn<>("Nr.");
@@ -100,9 +94,9 @@ public class Main extends Application
 		});
         Button deleteButton = new Button("Löschen");
         deleteButton.setOnAction(e -> deleteButtonClicked());
-        Button vModButton = new Button("Verwaltungsmodus");
+        Button vModButton = new Button("Verwaltungsmodus"); //Um in Verwaltung zu gelangen = vMod
         vModButton.setOnAction(e -> vModButtonClicked());
-        Button bModButton = new Button("Benutzermodus");
+        Button bModButton = new Button("Benutzermodus");    //Um in Benutzer zu gelangen = bMod
         bModButton.setOnAction(e -> bModButtonClicked());
 
         //Layout für die Eingabe
@@ -139,8 +133,8 @@ public class Main extends Application
         mainLayout.setBottom(eingLayout);
 
         Scene scene = new Scene(mainLayout);
-        window.setScene(scene);
-        window.show();
+        verwaltungsmodus.setScene(scene);
+        verwaltungsmodus.show();
     }
 
     //Hinzufügen Button
