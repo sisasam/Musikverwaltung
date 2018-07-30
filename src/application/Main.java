@@ -191,15 +191,23 @@ public class Main extends Application
     //Einfügen der Anfangswerte in die Tabelle
     public ObservableList<Tabelle> getTabelle()
     {
-        ObservableList<Tabelle> Tabellen = FXCollections.observableArrayList();
-        Tabellen.add(new Tabelle("Justin Bieber", "Baby", "Dreck"));
-        Tabellen.add(new Tabelle("Justin Bieber", "Baby", "Müll"));
-        Tabellen.add(new Tabelle("Justin Bieber", "Baby", "Scheiß"));
-        Tabellen.add(new Tabelle("Justin Bieber", "Baby", "Ohrenkrebs"));
-        Tabellen.add(new Tabelle("Justin Bieber", "Baby", "Lieber Eier in Piranhabecken hängen"));
+        ObservableList<Tabelle> tabellen = FXCollections.observableArrayList();
+        tabellen.add(new Tabelle("Justin Bieber", "Baby", "Dreck"));
+        tabellen.add(new Tabelle("Justin Bieber", "Baby", "Müll"));
+        tabellen.add(new Tabelle("Justin Bieber", "Baby", "Scheiß"));
+        tabellen.add(new Tabelle("Justin Bieber", "Baby", "Ohrenkrebs"));
+        tabellen.add(new Tabelle("Justin Bieber", "Baby", "Lieber Eier in Piranhabecken hängen"));
 //        Tabellen.add(new Tabelle(TitelEinbinden.einbinden()));
-        return Tabellen;
+        return tabellen;
     }
+    
+//    public ObservableList<Tabelle> getPlaylist()
+//    {
+//    	TitelEinbinden ein = new TitelEinbinden();
+//    	ObservableList<Tabelle> playlist = FXCollections.observableArrayList();
+//    	playlist.add(ein.einbinden(path))
+//    	return playlist
+//    }
 	
 	public static void main(String[] args) 
 	{
