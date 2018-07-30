@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.farng.mp3.TagException;
 
@@ -17,17 +18,18 @@ import java.io.IOException;
 
 public class Main extends Application 
 {
-	Stage verwaltungsmodus,benutzermodus;
+	Stage window;
+	Scene verwaltungsModus, benutzerModus;
     TableView<Tabelle> neuTabelle, playlist1;
     TextField pathEingabe;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception
 	{
-		verwaltungsmodus = primaryStage;
-        verwaltungsmodus.setTitle("Musikverwaltung");
-        verwaltungsmodus.setMinHeight(600);
-        verwaltungsmodus.setMinWidth(1024);
+		window = primaryStage;
+        window.setTitle("Musikverwaltung");
+        window.setMinHeight(600);
+        window.setMinWidth(1024);
         
         //Nr Spalte
         TableColumn<Tabelle, String> nrSpalte = new TableColumn<>("Nr.");
@@ -92,12 +94,11 @@ public class Main extends Application
 				e1.printStackTrace();
 			}
 		});
+
         Button deleteButton = new Button("Löschen");
         deleteButton.setOnAction(e -> deleteButtonClicked());
-        Button vModButton = new Button("Verwaltungsmodus"); //Um in Verwaltung zu gelangen = vMod
-        vModButton.setOnAction(e -> vModButtonClicked());
-        Button bModButton = new Button("Benutzermodus");    //Um in Benutzer zu gelangen = bMod
-        bModButton.setOnAction(e -> bModButtonClicked());
+        Button bModButton = new Button("Zum Benutzermodus");    //Um in Benutzer zu gelangen = bMod
+        bModButton.setOnAction(e -> window.setScene(benutzerModus));
 
         //Layout für die Eingabe
         HBox eingLayout = new HBox();
@@ -124,7 +125,7 @@ public class Main extends Application
         
         //Layout für die Mod Switches
         HBox modLayout = new HBox();
-        modLayout.getChildren().addAll(vModButton, bModButton);
+        modLayout.getChildren().addAll(bModButton); //vModButton,
         
         //Main Layout
         BorderPane mainLayout = new BorderPane();
@@ -132,9 +133,35 @@ public class Main extends Application
         mainLayout.setLeft(tabLayout);
         mainLayout.setBottom(eingLayout);
 
-        Scene scene = new Scene(mainLayout);
-        verwaltungsmodus.setScene(scene);
-        verwaltungsmodus.show();
+        verwaltungsModus = new Scene(mainLayout,1024,600);
+
+        //Starten im Verwaltungsmodus
+        window.setScene(verwaltungsModus);
+        window.show();
+
+        /* Benutzermodus */
+        BorderPane playerLayout = new BorderPane();
+
+        VBox layout2 = new VBox(10);
+        //Playaerelemente
+        HBox playerSteuerung = new HBox(40);
+        Button skipBack = new Button("Zurück");
+        Button play = new Button("Abspielen");
+        Button skipForward = new Button("Nächster");
+        playerSteuerung.getChildren().addAll(skipBack,play,skipForward);
+
+        playerLayout.setBottom(playerSteuerung);
+
+        //Linke Seite Benutzermodus
+        Label labelBenutzermodus = new Label("Benutzermodus");
+        Button button2 = new Button("Zum Verwaltungsmodus");
+        button2.setOnAction(e -> window.setScene(verwaltungsModus));
+        layout2.getChildren().addAll(labelBenutzermodus,button2);
+
+        playerLayout.setLeft(layout2);
+
+        benutzerModus = new Scene(playerLayout, 1024, 600);
+
     }
 
     //Hinzufügen Button
@@ -170,17 +197,18 @@ public class Main extends Application
     }
     
     //Verwaltungs Button
+    /*
     public void vModButtonClicked()
     {
-    	
+
     }
     
     //Benutzer Button
     public void bModButtonClicked()
     {
-    	
+    	;
     }
-    
+    */
 
     //Einfügen der Anfangswerte in die Tabelle
     public ObservableList<Tabelle> getTabelle()
