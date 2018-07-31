@@ -65,6 +65,8 @@ public class Main extends Application
 				e1.printStackTrace();
 			}
 		});
+        
+        AlertBox penis = new AlertBox();
 
         Button deleteButton = new Button("Löschen");
         deleteButton.setOnAction(e -> deleteButtonClicked());
@@ -74,6 +76,10 @@ public class Main extends Application
         inDiePlaylist.setOnAction(e -> inDiePlaylistClicked());
         Button ausDerPlaylist = new Button("Aus der Playlist");
         ausDerPlaylist.setOnAction(e -> ausDerPlaylistClicked());
+        Button genrePlay = new Button("Aus der Playlist");
+        genrePlay.setOnAction(e -> penis.genreSuche("JPenis", "Gooodie"));
+        Button interPlay = new Button("Aus der Playlist");
+        interPlay.setOnAction(e -> penis.display("penis", "penis"));
 
         //Layout für die Eingabe
         HBox eingLayout = new HBox();
@@ -206,6 +212,21 @@ public class Main extends Application
         playlistSwitcher.setPadding(new Insets(10, 10, 10, 10));
         playlistSwitcher.setSpacing(10);
         
+        VBox playlistMaker = new VBox();
+        playlistMaker.getChildren().addAll(genrePlay, interPlay);
+        playlistMaker.setAlignment(Pos.CENTER);
+        playlistMaker.setPadding(new Insets(10, 10, 10, 10));
+        playlistMaker.setSpacing(10);
+        playlistMaker.setStyle("-fx-padding: 5;" + 
+                "-fx-border-style: solid inside;" + 
+                "-fx-border-width: 2;" +
+                "-fx-border-insets: 5;" + 
+                "-fx-border-radius: 2;" + 
+                "-fx-border-color: blue;");
+        
+        VBox playlistLayout = new VBox();
+        playlistLayout.getChildren().addAll(playlistSwitcher, playlistMaker);
+        
         
         //Main Layout
         BorderPane mainLayout = new BorderPane();
@@ -213,7 +234,7 @@ public class Main extends Application
         mainLayout.setRight(plLayout);
         mainLayout.setBottom(eingLayout);
         mainLayout.setLeft(tabLayout);
-        mainLayout.setCenter(playlistSwitcher);
+        mainLayout.setCenter(playlistLayout);
 
         verwaltungsModus = new Scene(mainLayout,1024,600);
 
@@ -283,7 +304,7 @@ public class Main extends Application
         * MediaPlayer
         *
         * */
-        String path = "/Users/mariangeissler/Desktop/ets.mp3"; //TODO mit Richy's Funktion ersetzen
+        String path = "C:\\Users\\tarnd\\git\\Musik\\NikFos.mp3"/*"/Users/mariangeissler/Desktop/ets.mp3"*/; //TODO mit Richy's Funktion ersetzen
         Media media = new Media(new File(path).toURI().toString());
 
         MediaPlayer mediaPlayer = new MediaPlayer(media);
