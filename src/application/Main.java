@@ -28,10 +28,8 @@ public class Main extends Application
 	Stage window;
 	Scene verwaltungsModus, benutzerModus;
     TableView<Tabelle> neuTabelle, playlist1, playlist2, playlist3;
-    TextField pathEingabe;
-    Text MD, PL;
+    Text MD;
     boolean pl1,pl2,pl3;
-    ComboBox<String> playlistAusw;
     
     
 	@Override
@@ -65,7 +63,7 @@ public class Main extends Application
 				e1.printStackTrace();
 			}
 		});
-        
+
         AlertBox penis = new AlertBox();
 
         Button deleteButton = new Button("Löschen");
@@ -217,17 +215,17 @@ public class Main extends Application
         playlistMaker.setAlignment(Pos.CENTER);
         playlistMaker.setPadding(new Insets(10, 10, 10, 10));
         playlistMaker.setSpacing(10);
-        playlistMaker.setStyle("-fx-padding: 5;" + 
-                "-fx-border-style: solid inside;" + 
+        playlistMaker.setStyle("-fx-padding: 5;" +
+                "-fx-border-style: solid inside;" +
                 "-fx-border-width: 2;" +
-                "-fx-border-insets: 5;" + 
-                "-fx-border-radius: 2;" + 
+                "-fx-border-insets: 5;" +
+                "-fx-border-radius: 2;" +
                 "-fx-border-color: blue;");
-        
+
         VBox playlistLayout = new VBox();
         playlistLayout.getChildren().addAll(playlistSwitcher, playlistMaker);
-        
-        
+
+
         //Main Layout
         BorderPane mainLayout = new BorderPane();
         mainLayout.setTop(modLayout);
@@ -274,8 +272,11 @@ public class Main extends Application
         });
         playerLayout.getChildren().addAll(playListView);
 
-        modLayout2.getChildren().addAll(labelBenutzermodus,button2,
-                playlistAuswahlLabel,playListView,playlistAuswahl);
+        modLayout2.getChildren().addAll(labelBenutzermodus,button2);
+
+        VBox linkeListe = new VBox(10);
+        linkeListe.setPadding(new Insets(5, 5, 5, 5));
+        linkeListe.getChildren().addAll(playlistAuswahlLabel,playListView,playlistAuswahl);
 
         //Playaerelemente in horizontaler Anordnung
         HBox playerSteuerung = new HBox(40);
@@ -298,20 +299,26 @@ public class Main extends Application
         //Tabelle zentriert
         TableView<Tabelle> aktuellePlaylistTabelle = new TableView<>();
         TS.setting(aktuellePlaylistTabelle);
+        abspielInformationen.setPadding(new Insets(10,10,10,10));
         aktuellePlaylistTabelle.setItems(getTabelle()); //TODO noch setItems vervollständigen
         abspielInformationen.getChildren().addAll(aktPlaylistLabel,aktuellePlaylistTabelle);
         /*
         * MediaPlayer
         *
+        *
         * */
-        String path = "C:\\Users\\tarnd\\git\\Musik\\NikFos.mp3"/*"/Users/mariangeissler/Desktop/ets.mp3"*/; //TODO mit Richy's Funktion ersetzen
-        Media media = new Media(new File(path).toURI().toString());
+
+        String path = "/Users/mariangeissler/Desktop/ets.mp3"; //TODO mit Richy's Funktion ersetzen
+        Media media = new Media(new File(path).toURI().toString()); // Test: "/Users/mariangeissler/Desktop/ets.mp3"
+        //String path = "C:\\Users\\tarnd\\git\\Musik\\NikFos.mp3"/*"/Users/mariangeissler/Desktop/ets.mp3"*/; //TODO mit Richy's Funktion ersetzen
+        //Media media = new Media(new File(path).toURI().toString());
 
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setAutoPlay(false);
         MediaView mediaView = new MediaView(mediaPlayer);
-
+        //Player testSong1 = new Player("/Users/mariangeissler/Desktop/ets.mp3");
         //Play mit Funktion versehen
+
         play.setOnAction(event -> {
             if ("Pause".equals(play.getText()))
             {
@@ -337,7 +344,8 @@ public class Main extends Application
          * */
         //Layout setzen
         playerLayout.setCenter(abspielInformationen);
-        playerLayout.setLeft(modLayout2);
+        playerLayout.setTop(modLayout2);
+        playerLayout.setLeft(linkeListe);
         playerLayout.setBottom(playerSteuerung);
         playerLayout.setAlignment(playerSteuerung, Pos.BOTTOM_CENTER);// Playelemente Position
 
