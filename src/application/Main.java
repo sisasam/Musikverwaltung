@@ -1,8 +1,6 @@
 package application;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -12,6 +10,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -194,8 +195,10 @@ public class Main extends Application
         
         //Layout für die Mod Switches
         Label labelVerwaltungsmodus = new Label("Verwaltungsmodus");
-        VBox modLayout = new VBox();
-        modLayout.getChildren().addAll(labelVerwaltungsmodus,bModButton); //vModButton,
+        labelVerwaltungsmodus.setFont(new Font(20));
+        VBox modLayout = new VBox(10);
+        modLayout.getChildren().addAll(labelVerwaltungsmodus,bModButton);
+        modLayout.setPadding(new Insets(5, 5, 5, 5));
         
         VBox playlistSwitcher = new VBox();
         playlistSwitcher.getChildren().addAll(ausDerPlaylist, inDiePlaylist);
@@ -233,9 +236,11 @@ public class Main extends Application
         //Linke Seite Benutzermodus
         Label labelBenutzermodus = new Label("Benutzermodus");
         Button button2 = new Button("Zum Verwaltungsmodus");
+        labelBenutzermodus.setFont(new Font(20));
         button2.setOnAction(e -> window.setScene(verwaltungsModus));
         //Liste der Playlists
         Label playlistAuswahlLabel = new Label("Playlist auswählen:");
+        playlistAuswahlLabel.setFont(new Font(20));
         ListView<String> playListView = new ListView<String>(); //Datentyp anpassen!
         playListView.getItems().addAll("Testliste1","Testliste2", "Testliste3","Testliste4");
         playListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -258,23 +263,57 @@ public class Main extends Application
         playerSteuerung.alignmentProperty().isBound();
         //Player buttons
         Button skipBack = new Button("Zurück");
-        Button pause = new Button("Pause");
         Button stop = new Button("Stop");
         Button play = new Button("Abspielen");
         Button skipForward = new Button("Nächster");
-        playerSteuerung.getChildren().addAll(skipBack,stop,pause,play,skipForward);
+        playerSteuerung.getChildren().addAll(skipBack,stop,play,skipForward);
 
         //Mittige Tabelle für Abspielinformationen
         VBox abspielInformationen = new VBox(2);
         //Label Tabelle
         Label aktPlaylistLabel = new Label("Aktuelle Playlist");
+        aktPlaylistLabel.setFont(new Font(20));
         aktPlaylistLabel.setMinSize(20,20);
         //Tabelle zentriert
         TableView<Tabelle> aktuellePlaylistTabelle = new TableView<>();
         TS.setting(aktuellePlaylistTabelle);
         aktuellePlaylistTabelle.setItems(getTabelle()); //TODO noch setItems vervollständigen
         abspielInformationen.getChildren().addAll(aktPlaylistLabel,aktuellePlaylistTabelle);
+        /*
+        * MediaPlayer
+        *
+        * */
+        String path = "/Users/mariangeissler/Desktop/ets.mp3"; //TODO mit Richy's Funktion ersetzen
+        Media media = new Media(new File(path).toURI().toString());
 
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setAutoPlay(false);
+        MediaView mediaView = new MediaView(mediaPlayer);
+
+        //Play mit Funktion versehen
+        play.setOnAction(event -> {
+            if ("Pause".equals(play.getText()))
+            {
+                mediaView.getMediaPlayer().pause();
+                play.setText("Abspielen");
+            } else {
+                mediaView.getMediaPlayer().play();
+                mediaPlayer.play();
+                play.setText("Pause");
+            }
+            });
+        //Stop mit Funktion versehen
+        stop.setOnAction(event -> {
+            mediaView.getMediaPlayer().stop();
+            play.setText("Abspielen");
+        });
+
+        //Player im Layout setzen
+        playerLayout.setCenter(mediaView);
+        /*
+         * MediaPlayer Ende
+         *
+         * */
         //Layout setzen
         playerLayout.setCenter(abspielInformationen);
         playerLayout.setLeft(modLayout2);
