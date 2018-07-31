@@ -12,12 +12,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.farng.mp3.TagException;
 import javafx.scene.text.*;
 
 
 import java.beans.MethodDescriptor;
+import java.io.File;
 import java.io.IOException;
 
 
@@ -42,48 +44,48 @@ public class Main extends Application
         
         //TODO das ersetzen des Spaltenlayouts mit neuer Klasse um weitere Playlisten hinzuzufügen
 
-        //Titel Spalte
-        TableColumn<Tabelle, String> titelSpalte = new TableColumn<>("Titel");
-//        titelSpalte.setPrefWidth(100);	//bevorzugte Spaltenbreite
-//        titelSpalte.setMinWidth(50);	//minimale Spaltenbreite
-//        titelSpalte.setMaxWidth(150);	//maximale Spaltenbreite
-        TS.setting(titelSpalte);
-        titelSpalte.setCellValueFactory(new PropertyValueFactory<>("titel"));
-
-        //Titel Spalte
-        TableColumn<Tabelle, String> titelSpalte2 = new TableColumn<>("Titel");
-//        titelSpalte2.setPrefWidth(100);	//bevorzugte Spaltenbreite
-//        titelSpalte2.setMinWidth(50);	//minimale Spaltenbreite
-//        titelSpalte2.setMaxWidth(150);	//maximale Spaltenbreite
-        TS.setting(titelSpalte);
-        titelSpalte2.setCellValueFactory(new PropertyValueFactory<>("titel"));
-
-
-        //Interpreten Spalte
-        TableColumn<Tabelle, Double> interpretenSpalte = new TableColumn<>("Interpret");
-        interpretenSpalte.setPrefWidth(100);	//bevorzugte Spaltenbreite
-        interpretenSpalte.setMinWidth(50);	//minimale Spaltenbreite
-        interpretenSpalte.setMaxWidth(150);	//maximale Spaltenbreite
-        interpretenSpalte.setCellValueFactory(new PropertyValueFactory<>("interpret"));
-
-        //Interpreten Spalte
-        TableColumn<Tabelle, Double> interpretenSpalte2 = new TableColumn<>("Interpret");
-        interpretenSpalte2.setPrefWidth(100);	//bevorzugte Spaltenbreite
-        interpretenSpalte2.setMinWidth(50);	//minimale Spaltenbreite
-        interpretenSpalte2.setMaxWidth(150);	//maximale Spaltenbreite
-        interpretenSpalte2.setCellValueFactory(new PropertyValueFactory<>("interpret"));
-        //Genre Spalte
-        TableColumn<Tabelle, String> genreSpalte = new TableColumn<>("Genre");
-        genreSpalte.setPrefWidth(170);	//bevorzugte Spaltenbreite
-        genreSpalte.setMinWidth(50);	//minimale Spaltenbreite
-        genreSpalte.setMaxWidth(150);	//maximale Spaltenbreite
-        genreSpalte.setCellValueFactory(new PropertyValueFactory<>("genre"));
-        //Genre Spalte2
-        TableColumn<Tabelle, String> genreSpalte2 = new TableColumn<>("Genre");
-        genreSpalte2.setPrefWidth(170);	//bevorzugte Spaltenbreite
-        genreSpalte2.setMinWidth(50);	//minimale Spaltenbreite
-        genreSpalte2.setMaxWidth(150);	//maximale Spaltenbreite
-        genreSpalte2.setCellValueFactory(new PropertyValueFactory<>("genre"));
+// !!       //Titel Spalte
+//        TableColumn<Tabelle, String> titelSpalte = new TableColumn<>("Titel");
+////        titelSpalte.setPrefWidth(100);	//bevorzugte Spaltenbreite
+////        titelSpalte.setMinWidth(50);	//minimale Spaltenbreite
+////        titelSpalte.setMaxWidth(150);	//maximale Spaltenbreite
+//        TS.setting(titelSpalte);
+//        titelSpalte.setCellValueFactory(new PropertyValueFactory<>("titel"));
+//
+//        //Titel Spalte
+//        TableColumn<Tabelle, String> titelSpalte2 = new TableColumn<>("Titel");
+////        titelSpalte2.setPrefWidth(100);	//bevorzugte Spaltenbreite
+////        titelSpalte2.setMinWidth(50);	//minimale Spaltenbreite
+////        titelSpalte2.setMaxWidth(150);	//maximale Spaltenbreite
+//        TS.setting(titelSpalte);
+//        titelSpalte2.setCellValueFactory(new PropertyValueFactory<>("titel"));
+//
+//
+//        //Interpreten Spalte
+//        TableColumn<Tabelle, Double> interpretenSpalte = new TableColumn<>("Interpret");
+//        interpretenSpalte.setPrefWidth(100);	//bevorzugte Spaltenbreite
+//        interpretenSpalte.setMinWidth(50);	//minimale Spaltenbreite
+//        interpretenSpalte.setMaxWidth(150);	//maximale Spaltenbreite
+//        interpretenSpalte.setCellValueFactory(new PropertyValueFactory<>("interpret"));
+//
+//        //Interpreten Spalte
+//        TableColumn<Tabelle, Double> interpretenSpalte2 = new TableColumn<>("Interpret");
+//        interpretenSpalte2.setPrefWidth(100);	//bevorzugte Spaltenbreite
+//        interpretenSpalte2.setMinWidth(50);	//minimale Spaltenbreite
+//        interpretenSpalte2.setMaxWidth(150);	//maximale Spaltenbreite
+//        interpretenSpalte2.setCellValueFactory(new PropertyValueFactory<>("interpret"));
+//        //Genre Spalte
+//        TableColumn<Tabelle, String> genreSpalte = new TableColumn<>("Genre");
+//        genreSpalte.setPrefWidth(170);	//bevorzugte Spaltenbreite
+//        genreSpalte.setMinWidth(50);	//minimale Spaltenbreite
+//        genreSpalte.setMaxWidth(150);	//maximale Spaltenbreite
+//        genreSpalte.setCellValueFactory(new PropertyValueFactory<>("genre"));
+//        //Genre Spalte2
+//        TableColumn<Tabelle, String> genreSpalte2 = new TableColumn<>("Genre");
+//        genreSpalte2.setPrefWidth(170);	//bevorzugte Spaltenbreite
+//        genreSpalte2.setMinWidth(50);	//minimale Spaltenbreite
+//        genreSpalte2.setMaxWidth(150);	//maximale Spaltenbreite
+// !!       genreSpalte2.setCellValueFactory(new PropertyValueFactory<>("genre"));
 
         //Titel Eingabe
         pathEingabe = new TextField();
@@ -129,13 +131,14 @@ public class Main extends Application
 
         //Tabelle erstellen
         neuTabelle = new TableView<>();
-//        neuTabelle.setPrefWidth(300); //Sollte ich das rein nehmen?
+        TS.setting(neuTabelle);
         neuTabelle.setItems(getTabelle());
-        neuTabelle.getColumns().addAll(titelSpalte, interpretenSpalte, genreSpalte);
+//!!        neuTabelle.getColumns().addAll(titelSpalte, interpretenSpalte, genreSpalte);
         
         playlist1 = new TableView<>();
-//        playlist1.setItems(getTabelle());
-        playlist1.getColumns().addAll(titelSpalte2, interpretenSpalte2, genreSpalte2);
+        TS.setting(playlist1);
+//!!        playlist1.setItems(getTabelle());
+//!!        playlist1.getColumns().addAll(titelSpalte2, interpretenSpalte2, genreSpalte2);
         
         //Musikdatenbank TEXT
         MD = new Text();
@@ -268,15 +271,39 @@ public class Main extends Application
 	 */
     public void addButtonClicked() throws IOException, TagException
     {
-    	if(!pathEingabe.getText().isEmpty() )
-        {
+//    	if(!pathEingabe.getText().isEmpty() )
+//        {
+//    		TitelEinbinden eingabe = new TitelEinbinden();
+//    		Tabelle tabelle = new Tabelle();
+//    		String path = pathEingabe.getText();
+//            neuTabelle.getItems().add(eingabe.einbinden(path));
+//    		pathEingabe.clear();
+//    	}
+    	FileChooser fc = new FileChooser();
+    	configureFileChooser(fc);
+    	File selectedFile = fc.showOpenDialog(null);
+    	
+    	if(selectedFile != null)
+    	{
     		TitelEinbinden eingabe = new TitelEinbinden();
-    		Tabelle tabelle = new Tabelle();
-    		String path = pathEingabe.getText();
-            neuTabelle.getItems().add(eingabe.einbinden(path));
-    		pathEingabe.clear();
+    		neuTabelle.getItems().add(eingabe.einbinden(selectedFile.getAbsolutePath()));
+    	}
+    	else
+    	{
+    		/* Some weird ass shhit like printing out "you'r maaaaaa!" */
     	}
     }
+    //File Chooser bearbeiten(nur mp3 Dateien)
+    private static void configureFileChooser(
+            final FileChooser fileChooser) {      
+                fileChooser.setTitle("Wähle eine Musikdatei aus");
+                fileChooser.setInitialDirectory(
+                    new File(System.getProperty("user.home"))
+                );                 
+                fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("MP3", "*.mp3")
+                );
+        }
 
     //Löschen Button
     public void deleteButtonClicked()
