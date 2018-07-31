@@ -26,6 +26,7 @@ public class TitelEinbinden
 		table.setGenre(genre);
 		String inter = song.getInterpret();
 		table.setInterpret(inter);
+		table.setPath(path);
 		
 		return table;
 	}

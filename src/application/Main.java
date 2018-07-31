@@ -1,6 +1,8 @@
 package application;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -27,7 +29,7 @@ public class Main extends Application
 {
 	Stage window;
 	Scene verwaltungsModus, benutzerModus;
-    TableView<Tabelle> neuTabelle, playlist1;
+    TableView<Tabelle> neuTabelle, playlist1, playlist2, playlist3;
     TextField pathEingabe;
     Text MD, PL;
     
@@ -41,56 +43,6 @@ public class Main extends Application
         window.setMinWidth(1024);
         
         TableSetting TS = new TableSetting();
-        
-        //TODO das ersetzen des Spaltenlayouts mit neuer Klasse um weitere Playlisten hinzuzufügen
-
-// !!       //Titel Spalte
-//        TableColumn<Tabelle, String> titelSpalte = new TableColumn<>("Titel");
-////        titelSpalte.setPrefWidth(100);	//bevorzugte Spaltenbreite
-////        titelSpalte.setMinWidth(50);	//minimale Spaltenbreite
-////        titelSpalte.setMaxWidth(150);	//maximale Spaltenbreite
-//        TS.setting(titelSpalte);
-//        titelSpalte.setCellValueFactory(new PropertyValueFactory<>("titel"));
-//
-//        //Titel Spalte
-//        TableColumn<Tabelle, String> titelSpalte2 = new TableColumn<>("Titel");
-////        titelSpalte2.setPrefWidth(100);	//bevorzugte Spaltenbreite
-////        titelSpalte2.setMinWidth(50);	//minimale Spaltenbreite
-////        titelSpalte2.setMaxWidth(150);	//maximale Spaltenbreite
-//        TS.setting(titelSpalte);
-//        titelSpalte2.setCellValueFactory(new PropertyValueFactory<>("titel"));
-//
-//
-//        //Interpreten Spalte
-//        TableColumn<Tabelle, Double> interpretenSpalte = new TableColumn<>("Interpret");
-//        interpretenSpalte.setPrefWidth(100);	//bevorzugte Spaltenbreite
-//        interpretenSpalte.setMinWidth(50);	//minimale Spaltenbreite
-//        interpretenSpalte.setMaxWidth(150);	//maximale Spaltenbreite
-//        interpretenSpalte.setCellValueFactory(new PropertyValueFactory<>("interpret"));
-//
-//        //Interpreten Spalte
-//        TableColumn<Tabelle, Double> interpretenSpalte2 = new TableColumn<>("Interpret");
-//        interpretenSpalte2.setPrefWidth(100);	//bevorzugte Spaltenbreite
-//        interpretenSpalte2.setMinWidth(50);	//minimale Spaltenbreite
-//        interpretenSpalte2.setMaxWidth(150);	//maximale Spaltenbreite
-//        interpretenSpalte2.setCellValueFactory(new PropertyValueFactory<>("interpret"));
-//        //Genre Spalte
-//        TableColumn<Tabelle, String> genreSpalte = new TableColumn<>("Genre");
-//        genreSpalte.setPrefWidth(170);	//bevorzugte Spaltenbreite
-//        genreSpalte.setMinWidth(50);	//minimale Spaltenbreite
-//        genreSpalte.setMaxWidth(150);	//maximale Spaltenbreite
-//        genreSpalte.setCellValueFactory(new PropertyValueFactory<>("genre"));
-//        //Genre Spalte2
-//        TableColumn<Tabelle, String> genreSpalte2 = new TableColumn<>("Genre");
-//        genreSpalte2.setPrefWidth(170);	//bevorzugte Spaltenbreite
-//        genreSpalte2.setMinWidth(50);	//minimale Spaltenbreite
-//        genreSpalte2.setMaxWidth(150);	//maximale Spaltenbreite
-// !!       genreSpalte2.setCellValueFactory(new PropertyValueFactory<>("genre"));
-
-        //Titel Eingabe
-        pathEingabe = new TextField();
-        pathEingabe.setPromptText("Geben Sie den Path der Musikdatei ein, Bsp.: C:\\Users\\...\\Musik\\Bsp.mp3");
-        pathEingabe.setMinWidth(300);
 
         //Button
         // Die Exceptions müssen noch behandelt werden. + Entscheidung ob die Eingabe vom Path die Lösung ist.
@@ -127,27 +79,35 @@ public class Main extends Application
         HBox eingLayout = new HBox();
         eingLayout.setPadding(new Insets(10,10,10,10));
         eingLayout.setSpacing(10);
-        eingLayout.getChildren().addAll(pathEingabe, addButton, deleteButton);
+        eingLayout.getChildren().addAll(addButton, deleteButton);
 
         //Tabelle erstellen
         neuTabelle = new TableView<>();
         TS.setting(neuTabelle);
         neuTabelle.setItems(getTabelle());
-//!!        neuTabelle.getColumns().addAll(titelSpalte, interpretenSpalte, genreSpalte);
         
         playlist1 = new TableView<>();
         TS.setting(playlist1);
-//!!        playlist1.setItems(getTabelle());
-//!!        playlist1.getColumns().addAll(titelSpalte2, interpretenSpalte2, genreSpalte2);
+        playlist1.setItems(getTabelle());
+        playlist2 = new TableView<>();
+        TS.setting(playlist2);
+        playlist3 = new TableView<>();
+        TS.setting(playlist3);
         
         //Musikdatenbank TEXT
         MD = new Text();
         MD.setText("Musikdatenbank");
         MD.setFont(new Font(20));
         
-        PL = new Text();
-        PL.setText("Playlist");
-        PL.setFont(new Font(20));
+        //Combo Box für Auswahl der Playlisten
+        
+        final ComboBox playlistAusw = new ComboBox();
+        playlistAusw.getItems().addAll(
+            "Playlist 1",
+            "Playlist 2",
+            "Playlist 3" 
+        );
+        playlistAusw.setPromptText("Wählen Sie eine Playlist aus.");
 
         //Layout für die Tabelle
         VBox tabLayout = new VBox();
@@ -156,8 +116,65 @@ public class Main extends Application
         
         //Layout für die Playlist
         VBox plLayout = new VBox();
-        plLayout.getChildren().addAll(PL, playlist1);
+        plLayout.getChildren().addAll(playlistAusw);
         plLayout.setPadding(new Insets(10,10,10,10));
+        
+        playlistAusw.setOnAction(e -> {
+        	switch(playlistAusw.getValue().toString())
+        	{
+        	case "Playlist 1":
+        	{
+        		if(plLayout.getChildren().contains(playlist2))
+        		{
+        			plLayout.getChildren().remove(playlist2);
+        			plLayout.getChildren().addAll(playlist1);
+        		}
+        		else if(plLayout.getChildren().contains(playlist3))
+        		{
+        			plLayout.getChildren().remove(playlist3);
+            		plLayout.getChildren().addAll(playlist1);
+        		}
+        		else if (!plLayout.getChildren().contains(playlist1))
+        		{
+        			plLayout.getChildren().addAll(playlist1);
+        		}
+        	}
+        	case "Playlist 2":
+        	{
+        		if(plLayout.getChildren().contains(playlist1))
+        		{
+        			plLayout.getChildren().remove(playlist1);
+        			plLayout.getChildren().addAll(playlist2);
+        		}
+        		else if(plLayout.getChildren().contains(playlist3))
+        		{
+        			plLayout.getChildren().remove(playlist3);
+            		plLayout.getChildren().addAll(playlist2);
+        		}
+        		else if (!plLayout.getChildren().contains(playlist2))
+        		{
+        			plLayout.getChildren().addAll(playlist2);
+        		}
+        	}
+        	case "Playlist 3":
+        	{
+        		if(plLayout.getChildren().contains(playlist2))
+        		{
+        			plLayout.getChildren().remove(playlist2);
+        			plLayout.getChildren().addAll(playlist3);
+        		}
+        		else if(plLayout.getChildren().contains(playlist2))
+        		{
+        			plLayout.getChildren().remove(playlist2);
+            		plLayout.getChildren().addAll(playlist3);
+        		}
+        		else if (!plLayout.getChildren().contains(playlist3))
+        		{
+        			plLayout.getChildren().addAll(playlist3);
+        		}
+        	}
+        }
+        });
         
         //Layout für die Mod Switches
         Label labelVerwaltungsmodus = new Label("Verwaltungsmodus");

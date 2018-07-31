@@ -21,14 +21,6 @@ public class Tabelle
         this.interpret = interpret;
         this.genre = genre;
     }
-    
-    public Tabelle(String[] infos)
-    {
-    	this.titel = infos[0];
-      this.interpret = infos[1];
-      this.genre = infos[2];
-      this.setPath(infos[3]);
-    }
 
     public String getTitel() 
     {

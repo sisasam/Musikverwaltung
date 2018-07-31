@@ -5,7 +5,6 @@ public class Playlist1
 	private String title;
 	private String inter;
 	private String genre;
-	private int nr;
 	private String Path;
 	
 	
@@ -32,14 +31,6 @@ public class Playlist1
 	public void setGenre(String genre)
 	{
 		this.genre = genre;
-	}
-	public int getNr()
-	{
-		return nr;
-	}
-	public void setNr(int nr)
-	{
-		this.nr = nr;
 	}
 	public String getPath()
 	{
