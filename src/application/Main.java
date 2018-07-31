@@ -29,6 +29,8 @@ public class Main extends Application
     TableView<Tabelle> neuTabelle, playlist1, playlist2, playlist3;
     TextField pathEingabe;
     Text MD, PL;
+    boolean pl1,pl2,pl3;
+    ComboBox<String> playlistAusw;
     
     
 	@Override
@@ -90,6 +92,17 @@ public class Main extends Application
         TS.setting(playlist2);
         playlist3 = new TableView<>();
         TS.setting(playlist3);
+        //TEST
+        ObservableList<Tabelle> tabellen1 = FXCollections.observableArrayList();
+        tabellen1.add(new Tabelle("Justin Bieber", "Baby", "Playlist1"));
+        ObservableList<Tabelle> tabellen2 = FXCollections.observableArrayList();
+        tabellen2.add(new Tabelle("Justin Bieber", "Baby", "Playlist2"));
+        ObservableList<Tabelle> tabellen3 = FXCollections.observableArrayList();
+        tabellen3.add(new Tabelle("Justin Bieber", "Baby", "Playlist3"));
+        playlist1.setItems(tabellen1);
+        playlist2.setItems(tabellen2);
+        playlist3.setItems(tabellen3);
+        //TEST ENDE
         
         //Musikdatenbank TEXT
         MD = new Text();
@@ -98,7 +111,7 @@ public class Main extends Application
         
         //Combo Box für Auswahl der Playlisten
         
-        final ComboBox playlistAusw = new ComboBox();
+        ComboBox<String> playlistAusw = new ComboBox<String>();
         playlistAusw.getItems().addAll(
             "Playlist 1",
             "Playlist 2",
@@ -117,9 +130,7 @@ public class Main extends Application
         plLayout.setPadding(new Insets(10,10,10,10));
         
         playlistAusw.setOnAction(e -> {
-        	switch(playlistAusw.getValue().toString())
-        	{
-        	case "Playlist 1":
+        	if (playlistAusw.getValue().toString() == "Playlist 1")
         	{
         		if(plLayout.getChildren().contains(playlist2))
         		{
@@ -135,8 +146,11 @@ public class Main extends Application
         		{
         			plLayout.getChildren().addAll(playlist1);
         		}
+        		pl2=false;
+    			pl3=false;
+    			pl1=true;
         	}
-        	case "Playlist 2":
+        	else if (playlistAusw.getValue().toString() == "Playlist 2")
         	{
         		if(plLayout.getChildren().contains(playlist1))
         		{
@@ -152,25 +166,30 @@ public class Main extends Application
         		{
         			plLayout.getChildren().addAll(playlist2);
         		}
+        		pl2=true;
+    			pl3=false;
+    			pl1=false;
         	}
-        	case "Playlist 3":
+        	else if (playlistAusw.getValue().toString() == "Playlist 3")
         	{
         		if(plLayout.getChildren().contains(playlist2))
         		{
         			plLayout.getChildren().remove(playlist2);
         			plLayout.getChildren().addAll(playlist3);
         		}
-        		else if(plLayout.getChildren().contains(playlist2))
+        		else if(plLayout.getChildren().contains(playlist1))
         		{
-        			plLayout.getChildren().remove(playlist2);
+        			plLayout.getChildren().remove(playlist1);
             		plLayout.getChildren().addAll(playlist3);
         		}
         		else if (!plLayout.getChildren().contains(playlist3))
         		{
         			plLayout.getChildren().addAll(playlist3);
         		}
+        		pl2=false;
+    			pl3=true;
+    			pl1=false;
         	}
-        }
         });
         
         //Layout für die Mod Switches
@@ -274,15 +293,29 @@ public class Main extends Application
 
     private void inDiePlaylistClicked()
 	{
-		// TODO von der Liste in die Playlist übernehmen. (Funktioniert noch nicht. AAAAAber fast.)
     	ObservableList<Tabelle> Tabellenelected, allTabellen, Tabellenelected2, allTabellen2;
         allTabellen = neuTabelle.getItems();
         Tabellenelected = neuTabelle.getSelectionModel().getSelectedItems();
+        if(pl1)
+        {
+        	allTabellen2 = playlist1.getItems();
+            Tabellenelected2 = playlist1.getSelectionModel().getSelectedItems();
+            Tabellenelected.forEach(allTabellen2::add);
+        }
+        else if (pl2)
+        {
+        	allTabellen2 = playlist2.getItems();
+            Tabellenelected2 = playlist2.getSelectionModel().getSelectedItems();
+            Tabellenelected.forEach(allTabellen2::add);
+        }
+        else if (pl3)
+        {
+        	allTabellen2 = playlist3.getItems();
+            Tabellenelected2 = playlist3.getSelectionModel().getSelectedItems();
+            Tabellenelected.forEach(allTabellen2::add);
+        }
         
-        allTabellen2 = playlist1.getItems();
-        Tabellenelected2 = playlist1.getSelectionModel().getSelectedItems();
         
-        Tabellenelected.forEach(allTabellen2::add);
         
         
         
@@ -293,12 +326,32 @@ public class Main extends Application
 
 	private void ausDerPlaylistClicked()
 	{
-		// TODO Die Funktion bearbeiten, (aktuell nur gleiche Fkt. wie Löschen Button)
-		 ObservableList<Tabelle> Tabellenelected, allTabellen;
+		// TODO Abfangen des Falles, das die Playlist leer ist.
+		if(pl1)
+		{
+			ObservableList<Tabelle> Tabellenelected, allTabellen;
 	        allTabellen = playlist1.getItems();
 	        Tabellenelected = playlist1.getSelectionModel().getSelectedItems();
 
 	        Tabellenelected.forEach(allTabellen::remove);
+		}
+		else if(pl2)
+		{
+			ObservableList<Tabelle> Tabellenelected, allTabellen;
+	        allTabellen = playlist2.getItems();
+	        Tabellenelected = playlist2.getSelectionModel().getSelectedItems();
+
+	        Tabellenelected.forEach(allTabellen::remove);
+		}
+		else if(pl3)
+		{
+			ObservableList<Tabelle> Tabellenelected, allTabellen;
+	        allTabellen = playlist3.getItems();
+	        Tabellenelected = playlist3.getSelectionModel().getSelectedItems();
+
+	        Tabellenelected.forEach(allTabellen::remove);
+		}
+		
 	}
 
 	//Hinzufügen Button
@@ -307,14 +360,6 @@ public class Main extends Application
 	 */
     public void addButtonClicked() throws IOException, TagException
     {
-//    	if(!pathEingabe.getText().isEmpty() )
-//        {
-//    		TitelEinbinden eingabe = new TitelEinbinden();
-//    		Tabelle tabelle = new Tabelle();
-//    		String path = pathEingabe.getText();
-//            neuTabelle.getItems().add(eingabe.einbinden(path));
-//    		pathEingabe.clear();
-//    	}
     	FileChooser fc = new FileChooser();
     	configureFileChooser(fc);
     	File selectedFile = fc.showOpenDialog(null);
@@ -329,9 +374,11 @@ public class Main extends Application
     		/* Some weird ass shhit like printing out "you'r maaaaaa!" */
     	}
     }
+    
     //File Chooser bearbeiten(nur mp3 Dateien)
     private static void configureFileChooser(
-            final FileChooser fileChooser) {      
+            final FileChooser fileChooser) 
+    		{      
                 fileChooser.setTitle("Wähle eine Musikdatei aus");
                 fileChooser.setInitialDirectory(
                     new File(System.getProperty("user.home"))
@@ -339,7 +386,7 @@ public class Main extends Application
                 fileChooser.getExtensionFilters().addAll(
                     new FileChooser.ExtensionFilter("MP3", "*.mp3")
                 );
-        }
+    		}
 
     //Löschen Button
     public void deleteButtonClicked()
