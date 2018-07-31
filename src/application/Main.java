@@ -7,18 +7,15 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.farng.mp3.TagException;
-import javafx.scene.text.*;
 
-
-import java.beans.MethodDescriptor;
 import java.io.File;
 import java.io.IOException;
 
@@ -202,7 +199,7 @@ public class Main extends Application
         Button button2 = new Button("Zum Verwaltungsmodus");
         button2.setOnAction(e -> window.setScene(verwaltungsModus));
         //Liste der Playlists
-        Label playlistAuswahlLabel = new Label("Plalist auswählen:");
+        Label playlistAuswahlLabel = new Label("Playlist auswählen:");
         ListView<String> playListView = new ListView<String>(); //Datentyp anpassen!
         playListView.getItems().addAll("Testliste1","Testliste2", "Testliste3","Testliste4");
         playListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -215,24 +212,46 @@ public class Main extends Application
         });
         playerLayout.getChildren().addAll(playListView);
 
-        modLayout2.getChildren().addAll(labelBenutzermodus,button2,playlistAuswahlLabel,playListView,playlistAuswahl);
-
-        playerLayout.setLeft(modLayout2);
+        modLayout2.getChildren().addAll(labelBenutzermodus,button2,
+                playlistAuswahlLabel,playListView,playlistAuswahl);
 
         //Playaerelemente in horizontaler Anordnung
         HBox playerSteuerung = new HBox(40);
         playerSteuerung.setPadding(new Insets(5, 5, 5, 5));
+        playerSteuerung.setAlignment(Pos.CENTER);
+        playerSteuerung.alignmentProperty().isBound();
         //Player buttons
         Button skipBack = new Button("Zurück");
+        Button pause = new Button("Pause");
+        Button stop = new Button("Stop");
         Button play = new Button("Abspielen");
         Button skipForward = new Button("Nächster");
-        playerSteuerung.getChildren().addAll(skipBack,play,skipForward);
+        playerSteuerung.getChildren().addAll(skipBack,stop,pause,play,skipForward);
+
+        //Mittige Tabelle für Abspielinformationen
+        VBox abspielInformationen = new VBox(2);
+        //Label Tabelle
+        Label aktPlaylistLabel = new Label("Aktuelle Playlist");
+        aktPlaylistLabel.setMinSize(20,20);
+        //Tabelle zentriert
+        TableView<Tabelle> aktuellePlaylistTabelle = new TableView<>();
+        TS.setting(aktuellePlaylistTabelle);
+        aktuellePlaylistTabelle.setItems(getTabelle()); //TODO noch setItems vervollständigen
+        abspielInformationen.getChildren().addAll(aktPlaylistLabel,aktuellePlaylistTabelle);
+
+        //Layout setzen
+        playerLayout.setCenter(abspielInformationen);
+        playerLayout.setLeft(modLayout2);
         playerLayout.setBottom(playerSteuerung);
-        playerLayout.setAlignment(playerSteuerung, Pos.BOTTOM_CENTER);        // Playelemente Position
+        playerLayout.setAlignment(playerSteuerung, Pos.BOTTOM_CENTER);// Playelemente Position
 
 
 
         benutzerModus = new Scene(playerLayout, 1024, 600);
+        /*
+        *
+        * Benutzermodus Ende
+        */
 
     }
 
