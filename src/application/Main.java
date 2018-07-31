@@ -67,6 +67,8 @@ public class Main extends Application
 		});
         
         AlertBox penis = new AlertBox();
+        
+        //Für die Auswahl der Playlist nach Genre
 
         Button deleteButton = new Button("Löschen");
         deleteButton.setOnAction(e -> deleteButtonClicked());
@@ -77,9 +79,12 @@ public class Main extends Application
         Button ausDerPlaylist = new Button("Aus der Playlist");
         ausDerPlaylist.setOnAction(e -> ausDerPlaylistClicked());
         Button genrePlay = new Button("Aus der Playlist");
-        genrePlay.setOnAction(e -> penis.genreSuche("JPenis", "Gooodie"));
+        genrePlay.setOnAction(e -> {
+        	String auswahlGenre = penis.genreSuche("Genre Playlist");
+        	//TODO auswahl Genre in einer Klasse bzw. Methode verarbeiten um Playlist zu erstellen.
+        			});
         Button interPlay = new Button("Aus der Playlist");
-        interPlay.setOnAction(e -> penis.display("penis", "penis"));
+        interPlay.setOnAction(e -> penis.interSuche("Interpreten Playlist"));
 
         //Layout für die Eingabe
         HBox eingLayout = new HBox();
@@ -99,17 +104,17 @@ public class Main extends Application
         TS.setting(playlist2);
         playlist3 = new TableView<>();
         TS.setting(playlist3);
-        //TEST
-        ObservableList<Tabelle> tabellen1 = FXCollections.observableArrayList();
-        tabellen1.add(new Tabelle("Justin Bieber", "Baby", "Playlist1"));
-        ObservableList<Tabelle> tabellen2 = FXCollections.observableArrayList();
-        tabellen2.add(new Tabelle("Justin Bieber", "Baby", "Playlist2"));
-        ObservableList<Tabelle> tabellen3 = FXCollections.observableArrayList();
-        tabellen3.add(new Tabelle("Justin Bieber", "Baby", "Playlist3"));
-        playlist1.setItems(tabellen1);
-        playlist2.setItems(tabellen2);
-        playlist3.setItems(tabellen3);
-        //TEST ENDE
+//        //TEST
+//        ObservableList<Tabelle> tabellen1 = FXCollections.observableArrayList();
+//        tabellen1.add(new Tabelle("Justin Bieber", "Baby", "Playlist1"));
+//        ObservableList<Tabelle> tabellen2 = FXCollections.observableArrayList();
+//        tabellen2.add(new Tabelle("Justin Bieber", "Baby", "Playlist2"));
+//        ObservableList<Tabelle> tabellen3 = FXCollections.observableArrayList();
+//        tabellen3.add(new Tabelle("Justin Bieber", "Baby", "Playlist3"));
+//        playlist1.setItems(tabellen1);
+//        playlist2.setItems(tabellen2);
+//        playlist3.setItems(tabellen3);
+//        //TEST ENDE
         
         //Musikdatenbank TEXT
         MD = new Text();
@@ -304,7 +309,7 @@ public class Main extends Application
         * MediaPlayer
         *
         * */
-        String path = "C:\\Users\\tarnd\\git\\Musik\\NikFos.mp3"/*"/Users/mariangeissler/Desktop/ets.mp3"*/; //TODO mit Richy's Funktion ersetzen
+        String path = "C:\\Users\\Tore\\Music\\Vom Handy\\50 Cent - Greatest Hits 2CD (2008) 320 vtwin88cube\\Jeremih - Down On Me (feat. 50 Cent).mp3";//"C:\\Users\\tarnd\\git\\Musik\\NikFos.mp3"/*"/Users/mariangeissler/Desktop/ets.mp3"*/; //TODO mit Richy's Funktion ersetzen
         Media media = new Media(new File(path).toURI().toString());
 
         MediaPlayer mediaPlayer = new MediaPlayer(media);
