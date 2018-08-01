@@ -1,6 +1,7 @@
 package application;
 
 import backendapi.AdminModeApi;
+import backendapi.UserModeApi;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +23,8 @@ import org.farng.mp3.TagException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Main extends Application 
@@ -33,13 +36,15 @@ public class Main extends Application
     TableView<Tabelle> neuTabelle, playlist1, playlist2, playlist3;
     Text MD;
     boolean pl1,pl2,pl3;
-    
-    
+
 	@Override
 	public void start(Stage primaryStage) throws Exception
 	{
 		//Setup der Funktionalität, Initialisierung
-		String current = new java.io.File( "." ).getCanonicalPath();
+
+        UserModeApi userModeApi = new UserModeApi();
+
+        String current = new java.io.File( "." ).getCanonicalPath();
         System.out.println("Current dir:"+current);
 
 		window = primaryStage;
@@ -48,6 +53,7 @@ public class Main extends Application
         window.setMinWidth(1024);
         
         TableSetting TS = new TableSetting();
+        Button playlistAuswahl;
 
         //Button
         // Die Exceptions müssen noch behandelt werden. + Entscheidung ob die Eingabe vom Path die Lösung ist.
@@ -85,6 +91,24 @@ public class Main extends Application
         Button inDiePlaylist = new Button("In die Playlist");
         inDiePlaylist.setOnAction(e -> inDiePlaylistClicked());
         Button ausDerPlaylist = new Button("Aus der Playlist");
+        Button playlistEntfernen = new Button("Playlist entfernen");
+        Button playlistHinzu = new Button("Playlist hinzufügen");
+        playlistHinzu.setOnAction(event -> {
+            TextBox hinzu = new TextBox();
+            ArrayList<String> nameNeuPlaylist = new ArrayList<String>();
+            nameNeuPlaylist.add(hinzu.display("Neue Playlist",
+                    "Name der Playlist einfügen"));
+            ArrayList<String> dateipfadPlaylist = new ArrayList<String>();
+            dateipfadPlaylist.add("./Musik/"+nameNeuPlaylist+".txt");
+            try
+            {
+                userModeApi.addPlaylists(nameNeuPlaylist,"./Musik/PlaylistTitlePersistence.txt",
+                        "./Musik/PlaylistPersistence.txt",dateipfadPlaylist,true);
+            } catch (IOException e)
+            {
+                e.printStackTrace(); //TODO
+            }
+        });
         ausDerPlaylist.setOnAction(e -> ausDerPlaylistClicked());
         Button genrePlay = new Button("Genre");
         genrePlay.setOnAction(e -> {
@@ -225,7 +249,7 @@ public class Main extends Application
         modLayout.setPadding(new Insets(5, 5, 5, 5));
         
         VBox playlistSwitcher = new VBox();
-        playlistSwitcher.getChildren().addAll(ausDerPlaylist, inDiePlaylist);
+        playlistSwitcher.getChildren().addAll(ausDerPlaylist, inDiePlaylist, playlistHinzu,playlistEntfernen);
         playlistSwitcher.setAlignment(Pos.CENTER);
         playlistSwitcher.setPadding(new Insets(10, 10, 10, 10));
         playlistSwitcher.setSpacing(10);
@@ -266,6 +290,11 @@ public class Main extends Application
         ***
         *
         */
+        //Erzeugen der txt dateien für Playlistnamen
+        userModeApi.addPlaceOfPlaylistTitlePersistence("./Musik/PlaylistTitlePersistence.txt");
+        //Erzeugen der txt dateien für Playlistdateipfade
+        userModeApi.addPlaceOfPlaylistPersistence("./Musik/PlaylistPersistence.txt");
+
         BorderPane playerLayout = new BorderPane();
 
         VBox modLayout2 = new VBox(10);
@@ -279,13 +308,12 @@ public class Main extends Application
         //Liste der Playlists
         Label playlistAuswahlLabel = new Label("Playlist auswählen:");
         playlistAuswahlLabel.setFont(new Font(20));
-        ListView<String> playListView = new ListView<>(); //Datentyp anpassen!
-        playListView.getItems().addAll("Test");
+        ListView<List<String>> playListView = new ListView<List<String>>();
+        playListView.getItems().addAll(userModeApi.showAllExistingPlaylists("./Musik/PlaylistTitlePersistence.txt","./Musik/PlaylistPersistence.txt"));
         playListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         //Button für Playlist
-        Button playlistAuswahl = new Button("Playlist verwenden");
+        playlistAuswahl = new Button("Playlist verwenden");
         playlistAuswahl.setOnAction(event -> {
-        	// TODO Funktion fehlt!!
             playlistAuswahlClicked();
             System.out.println("Funktion für Playlist Wahl!");
         });
@@ -478,10 +506,9 @@ public class Main extends Application
         Tabellenelected.forEach(allTabellen::remove);
     }
     
-    private void playlistAuswahlClicked()
+    public void playlistAuswahlClicked()
     {
-        ObservableList<String> auswahl;
-        System.out.println("Boom");
+        System.out.println("Keine Funktion!");
     }
     
     //Einfügen der Anfangswerte in die Tabelle
