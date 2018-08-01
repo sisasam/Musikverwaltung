@@ -1,5 +1,6 @@
 package application;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -45,6 +46,7 @@ public class TextBox
         //Add buttons
         layout.getChildren().addAll(label,userEingabe, yesButton, noButton);
         layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(5,5,5,5));
         Scene scene = new Scene(layout);
         window.setScene(scene);
         window.showAndWait();
