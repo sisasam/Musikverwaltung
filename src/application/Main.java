@@ -328,7 +328,7 @@ public class Main extends Application
         * MediaPlayer
         *
         * */
-        String path = "C:\\Users\\tarnd\\git\\Musikverwaltung\\Musik\\shevamix_-_life_in_the_ghetto.mp3"/*"/Users/mariangeissler/Desktop/ets.mp3"*/; //TODO mit Richy's Funktion ersetzen
+        String path = ".\\Musik\\Mild_Way.mp3"/*"/Users/mariangeissler/Desktop/ets.mp3"*/; //TODO mit Richy's Funktion ersetzen
         Media media = new Media(new File(path).toURI().toString());
 
         MediaPlayer mediaPlayer = new MediaPlayer(media);
