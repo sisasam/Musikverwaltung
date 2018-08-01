@@ -12,6 +12,8 @@ import javafx.stage.Stage;
 public class AlertBox
 {
 	
+	static String auswahl;
+	
 	ComboBox<String> genre = new ComboBox<String>();
 
     public static void display(String title, String message) 
@@ -41,7 +43,7 @@ public class AlertBox
     public String genreSuche(String title)
     {
         Stage window = new Stage();
-        String auswahl;
+        
 
         //Block events to other windows
         window.initModality(Modality.APPLICATION_MODAL);
@@ -61,7 +63,7 @@ public class AlertBox
         //TODO Dropdown für Auswahl von Genre.
         //ICh hab hier ohne Witz nuuur Kacke gemacht und ich hab immer noch keine Ahnung, wie ich die Kack werte übergeben bekkomme und das schlimmste ist, dass das wirklche Problem dann erst anfängt !!
         submitButton.setOnAction(e -> {
-        	String auswahlInt = genre.getValue();
+        	String auswahl = genre.getValue();
         	});
         
 

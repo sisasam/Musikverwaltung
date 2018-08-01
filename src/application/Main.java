@@ -78,13 +78,18 @@ public class Main extends Application
         inDiePlaylist.setOnAction(e -> inDiePlaylistClicked());
         Button ausDerPlaylist = new Button("Aus der Playlist");
         ausDerPlaylist.setOnAction(e -> ausDerPlaylistClicked());
-        Button genrePlay = new Button("Aus der Playlist");
+        Button genrePlay = new Button("Genre");
         genrePlay.setOnAction(e -> {
-        	String auswahlGenre = penis.genreSuche("Genre Playlist");
+        	String auswahlGenre = penis.genreSuche("Genre");
+        	//PlaylistErstellen(auswahlGenre);
         	//TODO auswahl Genre in einer Klasse bzw. Methode verarbeiten um Playlist zu erstellen.
         			});
-        Button interPlay = new Button("Aus der Playlist");
-        interPlay.setOnAction(e -> penis.interSuche("Interpreten Playlist"));
+        Button interPlay = new Button("Interpreten");
+        interPlay.setOnAction(e -> {
+        	penis.interSuche("Interpreten Playlist");
+        	});
+        
+        
 
         //Layout für die Eingabe
         HBox eingLayout = new HBox();
@@ -309,7 +314,7 @@ public class Main extends Application
         * MediaPlayer
         *
         * */
-        String path = "C:\\Users\\Tore\\Music\\Vom Handy\\50 Cent - Greatest Hits 2CD (2008) 320 vtwin88cube\\Jeremih - Down On Me (feat. 50 Cent).mp3";//"C:\\Users\\tarnd\\git\\Musik\\NikFos.mp3"/*"/Users/mariangeissler/Desktop/ets.mp3"*/; //TODO mit Richy's Funktion ersetzen
+        String path = "C:\\Users\\tarnd\\git\\Musik\\NikFos.mp3"/*"/Users/mariangeissler/Desktop/ets.mp3"*/; //TODO mit Richy's Funktion ersetzen
         Media media = new Media(new File(path).toURI().toString());
 
         MediaPlayer mediaPlayer = new MediaPlayer(media);
