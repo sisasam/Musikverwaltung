@@ -61,7 +61,6 @@ public class AlertBox
         closeButton.setOnAction(e -> window.close());
         Button submitButton = new Button("Auswählen");
         //TODO Dropdown für Auswahl von Genre.
-        //ICh hab hier ohne Witz nuuur Kacke gemacht und ich hab immer noch keine Ahnung, wie ich die Kack werte übergeben bekkomme und das schlimmste ist, dass das wirklche Problem dann erst anfängt !!
         submitButton.setOnAction(e -> {
         	String auswahl = genre.getValue();
         	});
@@ -75,6 +74,8 @@ public class AlertBox
         Scene scene = new Scene(layout);
         window.setScene(scene);
         window.showAndWait();
+        
+        
         
         return auswahl;
     }

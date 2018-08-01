@@ -1,5 +1,6 @@
 package application;
 
+import backendapi.AdminModeApi;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,37 +18,38 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.farng.mp3.TagException;
+import logic.Song;
 
-import backendapi.AdminModeApi;
+import org.farng.mp3.TagException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Main extends Application 
 {
-	
+
 	//GUI und Funktionalität
 	Stage window;
 	Scene verwaltungsModus, benutzerModus;
     TableView<Tabelle> neuTabelle, playlist1, playlist2, playlist3;
-    TextField pathEingabe;
-    Text MD, PL;
+    Text MD;
     boolean pl1,pl2,pl3;
-    ComboBox<String> playlistAusw;
     
     
 	@Override
 	public void start(Stage primaryStage) throws Exception
 	{
 		//Setup der Funktionalität, Initialisierung
-		String current = new java.io.File( "." ).getCanonicalPath();
-        System.out.println("Current dir:"+current);
-        
-        
+//		String current = new java.io.File( "." ).getCanonicalPath();
+//        System.out.println("Current dir:"+current);
 		
+//		AdminModeApi admin = new AdminModeApi();
+//		admin.addPlaceOfSongPersistence("./Musik/admin.txt");
 		
+
 		window = primaryStage;
         window.setTitle("Musikverwaltung");
         window.setMinHeight(600);
@@ -81,7 +83,7 @@ public class Main extends Application
         AlertBox auswahl = new AlertBox();
         
         //Für die Auswahl der Playlist nach Genre
-        
+
         AdminModeApi adminMode = new AdminModeApi();
 
         Button deleteButton = new Button("Löschen");
@@ -102,8 +104,8 @@ public class Main extends Application
         interPlay.setOnAction(e -> {
         	auswahl.interSuche("Interpreten Playlist");
         	});
-        
-        
+
+
 
         //Layout für die Eingabe
         HBox eingLayout = new HBox();
@@ -123,17 +125,6 @@ public class Main extends Application
         TS.setting(playlist2);
         playlist3 = new TableView<>();
         TS.setting(playlist3);
-//        //TEST
-//        ObservableList<Tabelle> tabellen1 = FXCollections.observableArrayList();
-//        tabellen1.add(new Tabelle("Justin Bieber", "Baby", "Playlist1"));
-//        ObservableList<Tabelle> tabellen2 = FXCollections.observableArrayList();
-//        tabellen2.add(new Tabelle("Justin Bieber", "Baby", "Playlist2"));
-//        ObservableList<Tabelle> tabellen3 = FXCollections.observableArrayList();
-//        tabellen3.add(new Tabelle("Justin Bieber", "Baby", "Playlist3"));
-//        playlist1.setItems(tabellen1);
-//        playlist2.setItems(tabellen2);
-//        playlist3.setItems(tabellen3);
-//        //TEST ENDE
         
         //Musikdatenbank TEXT
         MD = new Text();
@@ -159,6 +150,8 @@ public class Main extends Application
         VBox plLayout = new VBox();
         plLayout.getChildren().addAll(playlistAusw);
         plLayout.setPadding(new Insets(10,10,10,10));
+        
+        
         
         playlistAusw.setOnAction(e -> {
         	if (playlistAusw.getValue().toString() == "Playlist 1")
@@ -241,17 +234,17 @@ public class Main extends Application
         playlistMaker.setAlignment(Pos.CENTER);
         playlistMaker.setPadding(new Insets(10, 10, 10, 10));
         playlistMaker.setSpacing(10);
-        playlistMaker.setStyle("-fx-padding: 5;" + 
-                "-fx-border-style: solid inside;" + 
+        playlistMaker.setStyle("-fx-padding: 5;" +
+                "-fx-border-style: solid inside;" +
                 "-fx-border-width: 2;" +
-                "-fx-border-insets: 5;" + 
-                "-fx-border-radius: 2;" + 
+                "-fx-border-insets: 5;" +
+                "-fx-border-radius: 2;" +
                 "-fx-border-color: blue;");
-        
+
         VBox playlistLayout = new VBox();
         playlistLayout.getChildren().addAll(playlistSwitcher, playlistMaker);
-        
-        
+
+
         //Main Layout
         BorderPane mainLayout = new BorderPane();
         mainLayout.setTop(modLayout);
@@ -261,6 +254,7 @@ public class Main extends Application
         mainLayout.setCenter(playlistLayout);
 
         verwaltungsModus = new Scene(mainLayout,1024,600);
+        
 
         //Starten im Verwaltungsmodus
         window.setScene(verwaltungsModus);
@@ -272,7 +266,6 @@ public class Main extends Application
         ***
         *
         */
-
         BorderPane playerLayout = new BorderPane();
 
         VBox modLayout2 = new VBox(10);
@@ -286,8 +279,8 @@ public class Main extends Application
         //Liste der Playlists
         Label playlistAuswahlLabel = new Label("Playlist auswählen:");
         playlistAuswahlLabel.setFont(new Font(20));
-        ListView<String> playListView = new ListView<String>(); //Datentyp anpassen!
-        playListView.getItems().addAll("Testliste1","Testliste2", "Testliste3","Testliste4");
+        ListView<String> playListView = new ListView<>(); //Datentyp anpassen!
+        playListView.getItems().addAll("Test");
         playListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         //Button für Playlist
         Button playlistAuswahl = new Button("Playlist verwenden");
@@ -322,20 +315,23 @@ public class Main extends Application
         //Tabelle zentriert
         TableView<Tabelle> aktuellePlaylistTabelle = new TableView<>();
         TS.setting(aktuellePlaylistTabelle);
+        abspielInformationen.setPadding(new Insets(10,10,10,10));
         aktuellePlaylistTabelle.setItems(getTabelle()); //TODO noch setItems vervollständigen
         abspielInformationen.getChildren().addAll(aktPlaylistLabel,aktuellePlaylistTabelle);
         /*
         * MediaPlayer
         *
+        *
         * */
-        String path = ".\\Musik\\Mild_Way.mp3"/*"/Users/mariangeissler/Desktop/ets.mp3"*/; //TODO mit Richy's Funktion ersetzen
+        String path = "./Musik/Mild_Way.mp3"/*"/Users/mariangeissler/Desktop/ets.mp3"*/; //TODO mit Richy's Funktion ersetzen
         Media media = new Media(new File(path).toURI().toString());
 
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setAutoPlay(false);
         MediaView mediaView = new MediaView(mediaPlayer);
-
+        //Player testSong1 = new Player("/Users/mariangeissler/Desktop/ets.mp3");
         //Play mit Funktion versehen
+
         play.setOnAction(event -> {
             if ("Pause".equals(play.getText()))
             {
@@ -489,15 +485,22 @@ public class Main extends Application
     }
     
     //Einfügen der Anfangswerte in die Tabelle
-    public ObservableList<Tabelle> getTabelle()
+    public ObservableList<Tabelle> getTabelle() throws IOException, TagException 
     {
-        ObservableList<Tabelle> tabellen = FXCollections.observableArrayList();
-        tabellen.add(new Tabelle("Justin Bieber", "Baby", "Dreck"));
-        tabellen.add(new Tabelle("Justin Bieber", "Baby", "Müll"));
-        tabellen.add(new Tabelle("Justin Bieber", "Baby", "Scheiß"));
-        tabellen.add(new Tabelle("Justin Bieber", "Baby", "Ohrenkrebs"));
-        tabellen.add(new Tabelle("Justin Bieber", "Baby", "Lieber Eier in Piranhabecken hängen"));
-        return tabellen;
+    	ObservableList<Tabelle> tabellen = FXCollections.observableArrayList();
+    	
+		AdminModeApi admin = new AdminModeApi();
+		admin.addPlaceOfSongPersistence("./Musik/admin.txt");
+		
+    	 List<Song> ListAllSongs = new ArrayList<Song>();
+ 		ListAllSongs = admin.generateSongList("./Musik/admin.txt");
+ 		TitelEinbinden eingabe = new TitelEinbinden();
+  
+ 		    for (Song current: ListAllSongs) 
+ 		    { 
+ 	    		tabellen.add(eingabe.einbinden(current));
+ 		    }
+ 		 return tabellen;
     }
 
     // Wird im Moment noch nicht verwendet --- Funktion eventuell für automatisches Erstellen aller Songs

@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="jid3lib-0.5.4" level="project" />
     <orderEntry type="library" name="musikverwaltung" level="project" />
+    <orderEntry type="library" name="musikverwaltung3" level="project" />
   </component>
 </module>
