@@ -24,6 +24,7 @@ import logic.Song;
 import org.farng.mp3.TagException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,7 @@ public class Main extends Application
     TableView<Tabelle> neuTabelle, playlist1, playlist2, playlist3;
     Text MD;
     boolean pl1,pl2,pl3;
+
 
 	@Override
 	public void start(Stage primaryStage) throws Exception
@@ -105,7 +107,8 @@ public class Main extends Application
             {
                 userModeApi.addPlaylists(nameNeuPlaylist,"./Musik/PlaylistTitlePersistence.txt",
                         "./Musik/PlaylistPersistence.txt",dateipfadPlaylist,true);
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 e.printStackTrace(); //TODO
             }
@@ -301,14 +304,39 @@ public class Main extends Application
         //Liste der Playlists
         Label playlistAuswahlLabel = new Label("Playlist auswählen:");
         playlistAuswahlLabel.setFont(new Font(20));
-        ListView<List<String>> playListView = new ListView<List<String>>();
-        playListView.getItems().addAll(userModeApi.showAllExistingPlaylists("./Musik/PlaylistTitlePersistence.txt","./Musik/PlaylistPersistence.txt"));
+
+        ListView<String> playListView = new ListView<String>();
+        for(String current: userModeApi.showAllExistingPlaylists("./Musik/PlaylistTitlePersistence.txt","./Musik/PlaylistPersistence.txt"))
+        {
+        playListView.getItems().addAll(current);
+        }
         playListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         //Button für Playlist
+        TableView<Tabelle> aktuellePlaylistTabelle = new TableView<>();
         playlistAuswahl = new Button("Playlist verwenden");
         playlistAuswahl.setOnAction(event -> {
-            playlistAuswahlClicked();
-            System.out.println("Funktion für Playlist Wahl!");
+            String penis = playListView.getSelectionModel().getSelectedItem();
+            try
+            {
+
+                TitelEinbinden fuerAktList = new TitelEinbinden();
+                for (Song current:  adminMode.generateSongList("./Musik/["+penis+"].txt"))
+                {
+                    try
+                    {
+                        aktuellePlaylistTabelle.getItems().add(fuerAktList.einbinden(current));
+                    } catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    } catch (TagException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (FileNotFoundException e)
+            {
+                e.printStackTrace();
+            }
         });
         playerLayout.getChildren().addAll(playListView);
 
@@ -334,7 +362,7 @@ public class Main extends Application
         aktPlaylistLabel.setFont(new Font(20));
         aktPlaylistLabel.setMinSize(20,20);
         //Tabelle zentriert
-        TableView<Tabelle> aktuellePlaylistTabelle = new TableView<>();
+       // TableView<Tabelle> aktuellePlaylistTabelle = new TableView<>();
         TS.setting(aktuellePlaylistTabelle);
         abspielInformationen.setPadding(new Insets(10,10,10,10));
         aktuellePlaylistTabelle.setItems(getTabelle()); //TODO noch setItems vervollständigen
@@ -504,7 +532,6 @@ public class Main extends Application
     
     public void playlistAuswahlClicked()
     {
-        System.out.println("Keine Funktion!");
     }
     
     //Einfügen der Anfangswerte in die Tabelle
