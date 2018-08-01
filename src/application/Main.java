@@ -42,9 +42,6 @@ public class Main extends Application
 		String current = new java.io.File( "." ).getCanonicalPath();
         System.out.println("Current dir:"+current);
 
-
-
-
 		window = primaryStage;
         window.setTitle("Musikverwaltung");
         window.setMinHeight(600);
