@@ -31,7 +31,7 @@ public class TitelEinbinden
 		return table;
 	}
 	
-	public Tabelle einbinden( Song song /*String path*/) throws IOException, TagException 
+	public Tabelle einbinden( Song song) throws IOException, TagException 
 	{
 //		Song song = new Song(path);
 		Tabelle table = new Tabelle();

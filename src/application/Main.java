@@ -497,6 +497,9 @@ public class Main extends Application
         Tabellenelected = neuTabelle.getSelectionModel().getSelectedItems();
 
         Tabellenelected.forEach(allTabellen::remove);
+        AdminModeApi admin = new AdminModeApi();
+       //still TODO admin.deleteSongs("./Musik/admin.txt", filepathesToDelete);
+        
     }
     
     public void playlistAuswahlClicked()
@@ -530,6 +533,14 @@ public class Main extends Application
 //        ObservableList<Tabelle> playlist = FXCollections.observableArrayList();
 //        playlist.add(ein.einbinden(path));
         return path;
+    }
+    
+    public String getFilePath(TableView<Tabelle> tabelleView)
+    {
+    	Tabelle tabelle = tabelleView.getSelectionModel().getSelectedItem();
+    	String path = tabelle.getPath();
+    	
+    	return path;
     }
 	
 	public static void main(String[] args) 
