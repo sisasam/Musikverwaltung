@@ -1,5 +1,6 @@
 package application;
 
+import backendapi.AdminModeApi;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -268,7 +269,6 @@ public class Main extends Application
         ***
         *
         */
-
         BorderPane playerLayout = new BorderPane();
 
         VBox modLayout2 = new VBox(10);
@@ -282,8 +282,8 @@ public class Main extends Application
         //Liste der Playlists
         Label playlistAuswahlLabel = new Label("Playlist auswählen:");
         playlistAuswahlLabel.setFont(new Font(20));
-        ListView<String> playListView = new ListView<String>(); //Datentyp anpassen!
-        playListView.getItems().addAll("Testliste1","Testliste2", "Testliste3","Testliste4");
+        ListView<String> playListView = new ListView<>(); //Datentyp anpassen!
+        playListView.getItems().addAll("Test");
         playListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         //Button für Playlist
         Button playlistAuswahl = new Button("Playlist verwenden");
@@ -326,7 +326,7 @@ public class Main extends Application
         *
         *
         * */
-        String path = "C:\\Users\\tarnd\\git\\Musikverwaltung\\Musik\\shevamix_-_life_in_the_ghetto.mp3"/*"/Users/mariangeissler/Desktop/ets.mp3"*/; //TODO mit Richy's Funktion ersetzen
+        String path = "/Users/mariangeissler/Workspace/Musikverwaltung/Musik/Get_Ready.mp3";/*"/Users/mariangeissler/Desktop/ets.mp3"*/ //TODO mit Richy's Funktion ersetzen
         Media media = new Media(new File(path).toURI().toString());
 
         MediaPlayer mediaPlayer = new MediaPlayer(media);
