@@ -1,5 +1,15 @@
 package application;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.farng.mp3.TagException;
+
 import backendapi.AdminModeApi;
 import backendapi.UserModeApi;
 import javafx.application.Application;
@@ -8,7 +18,13 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -21,14 +37,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import logic.Song;
 
-import org.farng.mp3.TagException;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class Main extends Application 
 {
@@ -39,6 +47,7 @@ public class Main extends Application
     TableView<Tabelle> neuTabelle, playlist1, playlist2, playlist3;
     Text MD;
     boolean pl1,pl2,pl3;
+    int marianAusw;
 
 
 	@Override
@@ -49,6 +58,25 @@ public class Main extends Application
 //		String current = new java.io.File( "." ).getCanonicalPath();
 //        System.out.println("Current dir:"+current);
         UserModeApi userModeApi = new UserModeApi();
+        //Erzeugen der txt dateien für Musikdatenbank
+        AdminModeApi admin = new AdminModeApi();
+		admin.addPlaceOfSongPersistence("./Musik/admin.txt");
+		//Erzeugen der txt dateien für Playlistnamen
+        userModeApi.addPlaceOfPlaylistTitlePersistence("./Musik/PlaylistTitlePersistence.txt");
+        //Erzeugen der txt dateien für Playlistdateipfade
+        userModeApi.addPlaceOfPlaylistPersistence("./Musik/PlaylistPersistence.txt");
+		
+		
+		//Initialisierung der Musikdatenbank!
+		if (fileEmpty())
+		{
+			addAllSongs();
+		}
+		
+		
+        
+        
+        
 
 		window = primaryStage;
         window.setTitle("Musikverwaltung");
@@ -80,12 +108,9 @@ public class Main extends Application
 			}
 		});
         
-        //TODO Auswahl für die Genre, Interpreten, nach denen Playlisten erstellt werden sollen.
         AlertBox auswahl = new AlertBox();
         
         //Für die Auswahl der Playlist nach Genre
-
-        AdminModeApi adminMode = new AdminModeApi();
 
         Button deleteButton = new Button("Löschen");
         deleteButton.setOnAction(e -> deleteButtonClicked());
@@ -116,10 +141,8 @@ public class Main extends Application
         ausDerPlaylist.setOnAction(e -> ausDerPlaylistClicked());
         Button genrePlay = new Button("Genre");
         genrePlay.setOnAction(e -> {
-        	String auswahlGenre = auswahl.genreSuche("Genre");
-        	//PlaylistErstellen(auswahlGenre);
-        	//TODO auswahl Genre in einer Klasse bzw. Methode verarbeiten um Playlist zu erstellen.
-        			});
+        	String auswahlGenre = auswahl.genreSuche("Genre Playlist");
+        });
         Button interPlay = new Button("Interpreten");
         interPlay.setOnAction(e -> {
         	auswahl.interSuche("Interpreten Playlist");
@@ -133,7 +156,7 @@ public class Main extends Application
         eingLayout.setSpacing(10);
         eingLayout.getChildren().addAll(addButton, deleteButton);
 
-        //Tabelle erstellen
+        //Tabellen erstellen
         neuTabelle = new TableView<>();
         TS.setting(neuTabelle);
         neuTabelle.setItems(getTabelle());
@@ -172,68 +195,84 @@ public class Main extends Application
         plLayout.setPadding(new Insets(10,10,10,10));
         
         
-        
+        //Auswahl aus der ComboBox, welche angezeigt werden
+        //TODO Marian übernehmen der angezeigten Playlist.
         playlistAusw.setOnAction(e -> {
+        	int hV = 0;
         	if (playlistAusw.getValue().toString() == "Playlist 1")
         	{
-        		if(plLayout.getChildren().contains(playlist2))
-        		{
-        			plLayout.getChildren().remove(playlist2);
-        			plLayout.getChildren().addAll(playlist1);
-        		}
-        		else if(plLayout.getChildren().contains(playlist3))
-        		{
-        			plLayout.getChildren().remove(playlist3);
-            		plLayout.getChildren().addAll(playlist1);
-        		}
-        		else if (!plLayout.getChildren().contains(playlist1))
-        		{
-        			plLayout.getChildren().addAll(playlist1);
-        		}
-        		pl2=false;
-    			pl3=false;
-    			pl1=true;
+        		hV = 1;
         	}
-        	else if (playlistAusw.getValue().toString() == "Playlist 2")
+        	if (playlistAusw.getValue().toString() == "Playlist 2")
         	{
-        		if(plLayout.getChildren().contains(playlist1))
-        		{
-        			plLayout.getChildren().remove(playlist1);
-        			plLayout.getChildren().addAll(playlist2);
-        		}
-        		else if(plLayout.getChildren().contains(playlist3))
-        		{
-        			plLayout.getChildren().remove(playlist3);
-            		plLayout.getChildren().addAll(playlist2);
-        		}
-        		else if (!plLayout.getChildren().contains(playlist2))
-        		{
-        			plLayout.getChildren().addAll(playlist2);
-        		}
-        		pl2=true;
-    			pl3=false;
-    			pl1=false;
+        		hV = 2;
         	}
-        	else if (playlistAusw.getValue().toString() == "Playlist 3")
+        	if (playlistAusw.getValue().toString() == "Playlist 3")
         	{
-        		if(plLayout.getChildren().contains(playlist2))
-        		{
-        			plLayout.getChildren().remove(playlist2);
-        			plLayout.getChildren().addAll(playlist3);
-        		}
-        		else if(plLayout.getChildren().contains(playlist1))
-        		{
-        			plLayout.getChildren().remove(playlist1);
-            		plLayout.getChildren().addAll(playlist3);
-        		}
-        		else if (!plLayout.getChildren().contains(playlist3))
-        		{
-        			plLayout.getChildren().addAll(playlist3);
-        		}
-        		pl2=false;
-    			pl3=true;
-    			pl1=false;
+        		hV = 3;
         	}
+        	auswahl(hV, plLayout);
+        	
+//        	if (playlistAusw.getValue().toString() == "Playlist 1")
+//        	{
+//        		if(plLayout.getChildren().contains(playlist2))
+//        		{
+//        			plLayout.getChildren().remove(playlist2);
+//        			plLayout.getChildren().addAll(playlist1);
+//        		}
+//        		else if(plLayout.getChildren().contains(playlist3))
+//        		{
+//        			plLayout.getChildren().remove(playlist3);
+//            		plLayout.getChildren().addAll(playlist1);
+//        		}
+//        		else if (!plLayout.getChildren().contains(playlist1))
+//        		{
+//        			plLayout.getChildren().addAll(playlist1);
+//        		}
+//        		pl2=false;
+//    			pl3=false;
+//    			pl1=true;
+//        	}
+//        	else if (playlistAusw.getValue().toString() == "Playlist 2")
+//        	{
+//        		if(plLayout.getChildren().contains(playlist1))
+//        		{
+//        			plLayout.getChildren().remove(playlist1);
+//        			plLayout.getChildren().addAll(playlist2);
+//        		}
+//        		else if(plLayout.getChildren().contains(playlist3))
+//        		{
+//        			plLayout.getChildren().remove(playlist3);
+//            		plLayout.getChildren().addAll(playlist2);
+//        		}
+//        		else if (!plLayout.getChildren().contains(playlist2))
+//        		{
+//        			plLayout.getChildren().addAll(playlist2);
+//        		}
+//        		pl2=true;
+//    			pl3=false;
+//    			pl1=false;
+//        	}
+//        	else if (playlistAusw.getValue().toString() == "Playlist 3")
+//        	{
+//        		if(plLayout.getChildren().contains(playlist2))
+//        		{
+//        			plLayout.getChildren().remove(playlist2);
+//        			plLayout.getChildren().addAll(playlist3);
+//        		}
+//        		else if(plLayout.getChildren().contains(playlist1))
+//        		{
+//        			plLayout.getChildren().remove(playlist1);
+//            		plLayout.getChildren().addAll(playlist3);
+//        		}
+//        		else if (!plLayout.getChildren().contains(playlist3))
+//        		{
+//        			plLayout.getChildren().addAll(playlist3);
+//        		}
+//        		pl2=false;
+//    			pl3=true;
+//    			pl1=false;
+//        	}
         });
         
         //Layout für die Mod Switches
@@ -286,10 +325,10 @@ public class Main extends Application
         ***
         *
         */
-        //Erzeugen der txt dateien für Playlistnamen
-        userModeApi.addPlaceOfPlaylistTitlePersistence("./Musik/PlaylistTitlePersistence.txt");
-        //Erzeugen der txt dateien für Playlistdateipfade
-        userModeApi.addPlaceOfPlaylistPersistence("./Musik/PlaylistPersistence.txt");
+//        //Erzeugen der txt dateien für Playlistnamen
+//        userModeApi.addPlaceOfPlaylistTitlePersistence("./Musik/PlaylistTitlePersistence.txt");
+//        //Erzeugen der txt dateien für Playlistdateipfade
+//        userModeApi.addPlaceOfPlaylistPersistence("./Musik/PlaylistPersistence.txt");
 
         BorderPane playerLayout = new BorderPane();
 
@@ -306,37 +345,60 @@ public class Main extends Application
         playlistAuswahlLabel.setFont(new Font(20));
 
         ListView<String> playListView = new ListView<String>();
-        for(String current: userModeApi.showAllExistingPlaylists("./Musik/PlaylistTitlePersistence.txt","./Musik/PlaylistPersistence.txt"))
+//        for(String current: userModeApi.showAllExistingPlaylists("./Musik/PlaylistTitlePersistence.txt","./Musik/PlaylistPersistence.txt"))
+//        {
+//        playListView.getItems().addAll(current);
+//        }
+//        playListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+/////////////////////////////////////////////////////////////////////////////////// VON TORE ANFANG
+        playListView.getItems().addAll(
+        		"Playlist 1",
+        		"Playlist 2",
+        		"Playlist 3"
+        		);
+        
+        if (playListView.getSelectionModel().getSelectedItem() == "Playlist 1")
         {
-        playListView.getItems().addAll(current);
+        	marianAusw = 1;
         }
-        playListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        else if (playListView.getSelectionModel().getSelectedItem() == "Playlist 2")
+        {
+        	marianAusw = 2;
+        }
+        else if (playListView.getSelectionModel().getSelectedItem() == "Playlist 3")
+        {
+        	marianAusw = 3;
+        }
+/////////////////////////////////////////////////////////////////////////////////// VON TORE ENDE
         //Button für Playlist
         TableView<Tabelle> aktuellePlaylistTabelle = new TableView<>();
         playlistAuswahl = new Button("Playlist verwenden");
         playlistAuswahl.setOnAction(event -> {
-            String penis = playListView.getSelectionModel().getSelectedItem();
-            try
-            {
-
-                TitelEinbinden fuerAktList = new TitelEinbinden();
-                for (Song current:  adminMode.generateSongList("./Musik/["+penis+"].txt"))
-                {
-                    try
-                    {
-                        aktuellePlaylistTabelle.getItems().add(fuerAktList.einbinden(current));
-                    } catch (IOException e)
-                    {
-                        e.printStackTrace();
-                    } catch (TagException e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-            } catch (FileNotFoundException e)
-            {
-                e.printStackTrace();
-            }
+/////////////////////////////////////////////////////////////////////////////////// VON TORE ANFANG //TODO abspielinformationen nach vorne holen
+        	auswahl(marianAusw, abspielInformationen);
+/////////////////////////////////////////////////////////////////////////////////// VON TORE ENDE
+//            String penis = playListView.getSelectionModel().getSelectedItem();
+//            try
+//            {
+//
+//                TitelEinbinden fuerAktList = new TitelEinbinden();
+//                for (Song current:  admin.generateSongList("./Musik/["+penis+"].txt"))
+//                {
+//                    try
+//                    {
+//                        aktuellePlaylistTabelle.getItems().add(fuerAktList.einbinden(current));
+//                    } catch (IOException e)
+//                    {
+//                        e.printStackTrace();
+//                    } catch (TagException e)
+//                    {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            } catch (FileNotFoundException e)
+//            {
+//                e.printStackTrace();
+//            }
         });
         playerLayout.getChildren().addAll(playListView);
 
@@ -411,7 +473,6 @@ public class Main extends Application
         playerLayout.setAlignment(playerSteuerung, Pos.BOTTOM_CENTER);// Playelemente Position
 
 
-
         benutzerModus = new Scene(playerLayout, 1024, 600);
         /*
         *
@@ -419,8 +480,117 @@ public class Main extends Application
         */
 
     }
+	
+	//Checks if first line is empty
+	private boolean fileEmpty() throws IOException, TagException 
+	{
+		FileReader fr = new FileReader("./Musik/admin.txt");
+	    BufferedReader br = new BufferedReader(fr);
 
-    private void inDiePlaylistClicked()
+	    boolean leer = false;
+
+	    if(br.readLine() == null)
+	    {
+	      leer = true;
+	    }
+
+	    br.close();
+		return leer;
+	}
+
+	//Bindet alle Songs ein.
+    private void addAllSongs() throws IOException, TagException 
+	{
+    	AdminModeApi admin = new AdminModeApi();
+    	List<String> songs = new ArrayList<String>();
+    	
+    	File dir = new File("./Musik/");
+        File[] directoryListing = dir.listFiles();
+        if (directoryListing != null) {
+          for (File child : directoryListing) 
+          {
+        	  if ( child.getCanonicalPath().toLowerCase().endsWith( ".mp3")) 
+        	  {
+        		  songs.add(child.getCanonicalPath());
+        	  }
+          }
+        } 
+        else 
+        {
+          // Handle the case where dir is not really a directory.
+          // Checking dir.isDirectory() above would not be sufficient
+          // to avoid race conditions with another process that deletes
+          // directories.
+        }
+        admin.addSongs(songs, "./Musik/admin.txt", true);
+		
+	}
+    
+    private void auswahl(int gewählt, VBox layout)
+    {
+    	if (gewählt == 1)
+    	{
+    		if(layout.getChildren().contains(playlist2))
+    		{
+    			layout.getChildren().remove(playlist2);
+    			layout.getChildren().addAll(playlist1);
+    		}
+    		else if(layout.getChildren().contains(playlist3))
+    		{
+    			layout.getChildren().remove(playlist3);
+    			layout.getChildren().addAll(playlist1);
+    		}
+    		else if (!layout.getChildren().contains(playlist1))
+    		{
+    			layout.getChildren().addAll(playlist1);
+    		}
+    		pl2=false;
+			pl3=false;
+			pl1=true;
+    	}
+    	else if (gewählt == 2)
+    	{
+    		if(layout.getChildren().contains(playlist1))
+    		{
+    			layout.getChildren().remove(playlist1);
+    			layout.getChildren().addAll(playlist2);
+    		}
+    		else if(layout.getChildren().contains(playlist3))
+    		{
+    			layout.getChildren().remove(playlist3);
+    			layout.getChildren().addAll(playlist2);
+    		}
+    		else if (!layout.getChildren().contains(playlist2))
+    		{
+    			layout.getChildren().addAll(playlist2);
+    		}
+    		pl2=true;
+			pl3=false;
+			pl1=false;
+    	}
+    	else if (gewählt == 3)
+    	{
+    		if(layout.getChildren().contains(playlist2))
+    		{
+    			layout.getChildren().remove(playlist2);
+    			layout.getChildren().addAll(playlist3);
+    		}
+    		else if(layout.getChildren().contains(playlist1))
+    		{
+    			layout.getChildren().remove(playlist1);
+    			layout.getChildren().addAll(playlist3);
+    		}
+    		else if (!layout.getChildren().contains(playlist3))
+    		{
+    			layout.getChildren().addAll(playlist3);
+    		}
+    		pl2=false;
+			pl3=true;
+			pl1=false;
+    	}
+    }
+
+	private void inDiePlaylistClicked() //TODO Richy's Funktionen (Speicheern der paths in txt)
 	{
     	ObservableList<Tabelle> Tabellenelected, allTabellen, Tabellenelected2, allTabellen2;
         allTabellen = neuTabelle.getItems();
@@ -443,14 +613,6 @@ public class Main extends Application
             Tabellenelected2 = playlist3.getSelectionModel().getSelectedItems();
             Tabellenelected.forEach(allTabellen2::add);
         }
-        
-        
-        
-        
-        
-        
-        
-        
 	}
 
 	private void ausDerPlaylistClicked()
@@ -537,7 +699,7 @@ public class Main extends Application
     	ObservableList<Tabelle> tabellen = FXCollections.observableArrayList();
     	
 		AdminModeApi admin = new AdminModeApi();
-		admin.addPlaceOfSongPersistence("./Musik/admin.txt");
+//		admin.addPlaceOfSongPersistence("./Musik/admin.txt");
 		
     	 List<Song> ListAllSongs = new ArrayList<Song>();
  		ListAllSongs = admin.generateSongList("./Musik/admin.txt");
