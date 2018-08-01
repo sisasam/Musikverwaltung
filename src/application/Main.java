@@ -19,12 +19,16 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.farng.mp3.TagException;
 
+import backendapi.AdminModeApi;
+
 import java.io.File;
 import java.io.IOException;
 
 
 public class Main extends Application 
 {
+	
+	//GUI und Funktionalität
 	Stage window;
 	Scene verwaltungsModus, benutzerModus;
     TableView<Tabelle> neuTabelle, playlist1, playlist2, playlist3;
@@ -37,6 +41,13 @@ public class Main extends Application
 	@Override
 	public void start(Stage primaryStage) throws Exception
 	{
+		//Setup der Funktionalität, Initialisierung
+		String current = new java.io.File( "." ).getCanonicalPath();
+        System.out.println("Current dir:"+current);
+        
+        
+		
+		
 		window = primaryStage;
         window.setTitle("Musikverwaltung");
         window.setMinHeight(600);
@@ -66,9 +77,12 @@ public class Main extends Application
 			}
 		});
         
-        AlertBox penis = new AlertBox();
+        //TODO Auswahl für die Genre, Interpreten, nach denen Playlisten erstellt werden sollen.
+        AlertBox auswahl = new AlertBox();
         
         //Für die Auswahl der Playlist nach Genre
+        
+        AdminModeApi adminMode = new AdminModeApi();
 
         Button deleteButton = new Button("Löschen");
         deleteButton.setOnAction(e -> deleteButtonClicked());
@@ -80,13 +94,13 @@ public class Main extends Application
         ausDerPlaylist.setOnAction(e -> ausDerPlaylistClicked());
         Button genrePlay = new Button("Genre");
         genrePlay.setOnAction(e -> {
-        	String auswahlGenre = penis.genreSuche("Genre");
+        	String auswahlGenre = auswahl.genreSuche("Genre");
         	//PlaylistErstellen(auswahlGenre);
         	//TODO auswahl Genre in einer Klasse bzw. Methode verarbeiten um Playlist zu erstellen.
         			});
         Button interPlay = new Button("Interpreten");
         interPlay.setOnAction(e -> {
-        	penis.interSuche("Interpreten Playlist");
+        	auswahl.interSuche("Interpreten Playlist");
         	});
         
         
@@ -314,7 +328,7 @@ public class Main extends Application
         * MediaPlayer
         *
         * */
-        String path = "C:\\Users\\tarnd\\git\\Musik\\NikFos.mp3"/*"/Users/mariangeissler/Desktop/ets.mp3"*/; //TODO mit Richy's Funktion ersetzen
+        String path = "C:\\Users\\tarnd\\git\\Musikverwaltung\\Musik\\shevamix_-_life_in_the_ghetto.mp3"/*"/Users/mariangeissler/Desktop/ets.mp3"*/; //TODO mit Richy's Funktion ersetzen
         Media media = new Media(new File(path).toURI().toString());
 
         MediaPlayer mediaPlayer = new MediaPlayer(media);
