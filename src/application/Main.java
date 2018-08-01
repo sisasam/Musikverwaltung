@@ -66,6 +66,8 @@ public class Main extends Application
 
         AlertBox penis = new AlertBox();
 
+        //Für die Auswahl der Playlist nach Genre
+
         Button deleteButton = new Button("Löschen");
         deleteButton.setOnAction(e -> deleteButtonClicked());
         Button bModButton = new Button("Zum Benutzermodus");    //Um in Benutzer zu gelangen = bMod
@@ -75,9 +77,12 @@ public class Main extends Application
         Button ausDerPlaylist = new Button("Aus der Playlist");
         ausDerPlaylist.setOnAction(e -> ausDerPlaylistClicked());
         Button genrePlay = new Button("Aus der Playlist");
-        genrePlay.setOnAction(e -> penis.genreSuche("JPenis", "Gooodie"));
+        genrePlay.setOnAction(e -> {
+        	String auswahlGenre = penis.genreSuche("Genre Playlist");
+        	//TODO auswahl Genre in einer Klasse bzw. Methode verarbeiten um Playlist zu erstellen.
+        			});
         Button interPlay = new Button("Aus der Playlist");
-        interPlay.setOnAction(e -> penis.display("penis", "penis"));
+        interPlay.setOnAction(e -> penis.interSuche("Interpreten Playlist"));
 
         //Layout für die Eingabe
         HBox eingLayout = new HBox();
@@ -97,17 +102,17 @@ public class Main extends Application
         TS.setting(playlist2);
         playlist3 = new TableView<>();
         TS.setting(playlist3);
-        //TEST
-        ObservableList<Tabelle> tabellen1 = FXCollections.observableArrayList();
-        tabellen1.add(new Tabelle("Justin Bieber", "Baby", "Playlist1"));
-        ObservableList<Tabelle> tabellen2 = FXCollections.observableArrayList();
-        tabellen2.add(new Tabelle("Justin Bieber", "Baby", "Playlist2"));
-        ObservableList<Tabelle> tabellen3 = FXCollections.observableArrayList();
-        tabellen3.add(new Tabelle("Justin Bieber", "Baby", "Playlist3"));
-        playlist1.setItems(tabellen1);
-        playlist2.setItems(tabellen2);
-        playlist3.setItems(tabellen3);
-        //TEST ENDE
+//        //TEST
+//        ObservableList<Tabelle> tabellen1 = FXCollections.observableArrayList();
+//        tabellen1.add(new Tabelle("Justin Bieber", "Baby", "Playlist1"));
+//        ObservableList<Tabelle> tabellen2 = FXCollections.observableArrayList();
+//        tabellen2.add(new Tabelle("Justin Bieber", "Baby", "Playlist2"));
+//        ObservableList<Tabelle> tabellen3 = FXCollections.observableArrayList();
+//        tabellen3.add(new Tabelle("Justin Bieber", "Baby", "Playlist3"));
+//        playlist1.setItems(tabellen1);
+//        playlist2.setItems(tabellen2);
+//        playlist3.setItems(tabellen3);
+//        //TEST ENDE
         
         //Musikdatenbank TEXT
         MD = new Text();
@@ -272,11 +277,8 @@ public class Main extends Application
         });
         playerLayout.getChildren().addAll(playListView);
 
-        modLayout2.getChildren().addAll(labelBenutzermodus,button2);
-
-        VBox linkeListe = new VBox(10);
-        linkeListe.setPadding(new Insets(5, 5, 5, 5));
-        linkeListe.getChildren().addAll(playlistAuswahlLabel,playListView,playlistAuswahl);
+        modLayout2.getChildren().addAll(labelBenutzermodus,button2,
+                playlistAuswahlLabel,playListView,playlistAuswahl);
 
         //Playaerelemente in horizontaler Anordnung
         HBox playerSteuerung = new HBox(40);
@@ -344,8 +346,7 @@ public class Main extends Application
          * */
         //Layout setzen
         playerLayout.setCenter(abspielInformationen);
-        playerLayout.setTop(modLayout2);
-        playerLayout.setLeft(linkeListe);
+        playerLayout.setLeft(modLayout2);
         playerLayout.setBottom(playerSteuerung);
         playerLayout.setAlignment(playerSteuerung, Pos.BOTTOM_CENTER);// Playelemente Position
 
