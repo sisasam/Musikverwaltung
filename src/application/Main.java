@@ -76,13 +76,18 @@ public class Main extends Application
         inDiePlaylist.setOnAction(e -> inDiePlaylistClicked());
         Button ausDerPlaylist = new Button("Aus der Playlist");
         ausDerPlaylist.setOnAction(e -> ausDerPlaylistClicked());
-        Button genrePlay = new Button("Aus der Playlist");
+        Button genrePlay = new Button("Genre");
         genrePlay.setOnAction(e -> {
-        	String auswahlGenre = penis.genreSuche("Genre Playlist");
+        	String auswahlGenre = penis.genreSuche("Genre");
+        	//PlaylistErstellen(auswahlGenre);
         	//TODO auswahl Genre in einer Klasse bzw. Methode verarbeiten um Playlist zu erstellen.
         			});
-        Button interPlay = new Button("Aus der Playlist");
-        interPlay.setOnAction(e -> penis.interSuche("Interpreten Playlist"));
+        Button interPlay = new Button("Interpreten");
+        interPlay.setOnAction(e -> {
+        	penis.interSuche("Interpreten Playlist");
+        	});
+
+
 
         //Layout für die Eingabe
         HBox eingLayout = new HBox();
