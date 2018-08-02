@@ -1,15 +1,5 @@
 package application;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.farng.mp3.TagException;
-
 import backendapi.AdminModeApi;
 import backendapi.UserModeApi;
 import javafx.application.Application;
@@ -18,13 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -36,6 +20,11 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import logic.Song;
+import org.farng.mp3.TagException;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Main extends Application 
@@ -133,10 +122,34 @@ public class Main extends Application
         Button bModButton = new Button("Zum Benutzermodus");    //Um in Benutzer zu gelangen = bMod
         bModButton.setOnAction(e -> window.setScene(benutzerModus));
         Button inDiePlaylist = new Button("In die Playlist");
-        inDiePlaylist.setOnAction(e -> inDiePlaylistClicked());
+        inDiePlaylist.setOnAction(e -> {
+            List<String> uebergabePath = new ArrayList<String>();
+            uebergabePath.add(neuTabelle.getSelectionModel().getSelectedItem().getPath());
+            String dateiPfad ="";
+            if (pl2)
+            {
+                dateiPfad = "playlist2.txt";
+            }
+            if (pl3)
+            {
+                dateiPfad = "playlist3.txt";
+            }
+            try
+            {
+                //System.out.println(uebergabePath);
+                admin.addSongs(uebergabePath,"./Musik/"+dateiPfad,true);
+            } catch (FileNotFoundException e1)
+            {
+                e1.printStackTrace();
+            }
+            inDiePlaylistClicked();
+                }
+        );
         Button ausDerPlaylist = new Button("Aus der Playlist");
+        /*
         Button playlistEntfernen = new Button("Playlist entfernen");
         Button playlistHinzu = new Button("Playlist hinzufügen");
+
         playlistHinzu.setOnAction(event -> {
             TextBox hinzu = new TextBox();
             ArrayList<String> nameNeuPlaylist = new ArrayList<String>();
@@ -154,7 +167,10 @@ public class Main extends Application
                 e.printStackTrace(); //TODO
             }
         });
-        ausDerPlaylist.setOnAction(e -> ausDerPlaylistClicked());
+        */
+        ausDerPlaylist.setOnAction(e ->{
+            ausDerPlaylistClicked();
+        });
         Button genrePlay = new Button("Genre");
         genrePlay.setOnAction(e -> {
         	String auswahlGenre = auswahl.genreSuche("Genre Playlist");
@@ -182,7 +198,9 @@ public class Main extends Application
         playlist1.setItems(getTabelle());
         playlist2 = new TableView<>();
         TS.setting(playlist2);
+        admin.addPlaceOfSongPersistence("./Musik/playlist2.txt");
         playlist3 = new TableView<>();
+        admin.addPlaceOfSongPersistence("./Musik/playlist3.txt");
         TS.setting(playlist3);
         
         //Musikdatenbank TEXT
@@ -217,17 +235,41 @@ public class Main extends Application
         	int hV = 0;
         	if (playlistAusw.getValue().toString() == "Playlist 1")
         	{
-        		hV = 1;
+
+                hV = 1;
         	}
         	if (playlistAusw.getValue().toString() == "Playlist 2")
         	{
-        		hV = 2;
+                try
+                {
+                    playlist2.setItems(getPlaylist(  "playlist2"));
+                } catch (IOException e1)
+                {
+                    e1.printStackTrace();
+                } catch (TagException e1)
+                {
+                    e1.printStackTrace();
+                }
+                hV = 2;
         	}
         	if (playlistAusw.getValue().toString() == "Playlist 3")
         	{
+                try
+                {
+                    playlist3.setItems(getPlaylist("playlist3"));
+                } catch (IOException e1)
+                {
+                    e1.printStackTrace();
+                } catch (TagException e1)
+                {
+                    e1.printStackTrace();
+                }
+
+                //getPlaylist(playlistName);
         		hV = 3;
         	}
         	auswahl(hV, plLayout);
+
         	
 //        	if (playlistAusw.getValue().toString() == "Playlist 1")
 //        	{
@@ -299,7 +341,7 @@ public class Main extends Application
         modLayout.setPadding(new Insets(5, 5, 5, 5));
         
         VBox playlistSwitcher = new VBox();
-        playlistSwitcher.getChildren().addAll(ausDerPlaylist, inDiePlaylist, playlistHinzu,playlistEntfernen);
+        playlistSwitcher.getChildren().addAll(ausDerPlaylist, inDiePlaylist);
         playlistSwitcher.setAlignment(Pos.CENTER);
         playlistSwitcher.setPadding(new Insets(10, 10, 10, 10));
         playlistSwitcher.setSpacing(10);
@@ -349,7 +391,7 @@ public class Main extends Application
         BorderPane playerLayout = new BorderPane();
 
         VBox modLayout2 = new VBox(10);
-        modLayout2.setPadding(new Insets(5, 5, 5, 5));
+        modLayout2.setPadding(new Insets(10, 10, 10, 10));
 
         //Linke Seite Benutzermodus
         Label labelBenutzermodus = new Label("Benutzermodus");
@@ -388,9 +430,9 @@ public class Main extends Application
         });
        
         //Mittige Tabelle für Abspielinformationen
-        VBox abspielInformationen = new VBox();
+        VBox abspielInformationen = new VBox(10);
         //Label Tabelle
-        Label aktPlaylistLabel = new Label("Aktuelle Playlist");
+        Label aktPlaylistLabel = new Label("Aktuelle Playlist:");
         aktPlaylistLabel.setFont(new Font(20));
         aktPlaylistLabel.setMinSize(20,20);
         //Tabelle zentriert
@@ -432,8 +474,7 @@ public class Main extends Application
         });
         playerLayout.getChildren().addAll(playListView);
 
-        modLayout2.getChildren().addAll(labelBenutzermodus,button2,
-                playlistAuswahlLabel,playListView,playlistAuswahl);
+        modLayout2.getChildren().addAll(playlistAuswahlLabel,playListView,playlistAuswahl);
 
         //Playaerelemente in horizontaler Anordnung
         HBox playerSteuerung = new HBox(40);
@@ -518,7 +559,11 @@ public class Main extends Application
          * */
         }
         //Layout setzen
+        VBox labelLayout = new VBox(10);
+        labelLayout.getChildren().addAll(labelBenutzermodus,button2);
+        labelLayout.setPadding(new Insets(5,5,5,5));
         playerLayout.setCenter(abspielInformationen);
+        playerLayout.setTop(labelLayout);
         playerLayout.setLeft(modLayout2);
         playerLayout.setBottom(playerSteuerung);
         playerLayout.setAlignment(playerSteuerung, Pos.BOTTOM_CENTER);// Playelemente Position
@@ -682,16 +727,35 @@ public class Main extends Application
 			ObservableList<Tabelle> Tabellenelected, allTabellen;
 	        allTabellen = playlist2.getItems();
 	        Tabellenelected = playlist2.getSelectionModel().getSelectedItems();
-
-	        Tabellenelected.forEach(allTabellen::remove);
+            try
+            {
+                deleteButtonClicked(playlist2,"./Musik/playlist2.txt");
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            } catch (TagException e)
+            {
+                e.printStackTrace();
+            }
+            Tabellenelected.forEach(allTabellen::remove);
 		}
 		else if(pl3)
 		{
 			ObservableList<Tabelle> Tabellenelected, allTabellen;
 	        allTabellen = playlist3.getItems();
 	        Tabellenelected = playlist3.getSelectionModel().getSelectedItems();
+            try
+            {
+                deleteButtonClicked(playlist3,"./Musik/playlist3.txt");
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            } catch (TagException e)
+            {
+                e.printStackTrace();
+            }
 
-	        Tabellenelected.forEach(allTabellen::remove);
+            Tabellenelected.forEach(allTabellen::remove);
 		}
 	}
 
@@ -746,6 +810,19 @@ public class Main extends Application
         deleteSong.add(neuTabelle.getSelectionModel().getSelectedItem().getPath());
         admin.deleteSongs("./Musik/admin.txt", deleteSong);
     }
+
+    public void deleteButtonClicked(TableView<Tabelle> tabelle, String path) throws IOException ,TagException
+    {
+        ObservableList<Tabelle> Tabellenelected, allTabellen;
+        allTabellen = tabelle.getItems();
+        Tabellenelected = tabelle.getSelectionModel().getSelectedItems();
+
+        Tabellenelected.forEach(allTabellen::remove);
+        AdminModeApi admin = new AdminModeApi();
+        List<String> deleteSong = new ArrayList<String>();
+        deleteSong.add(tabelle.getSelectionModel().getSelectedItem().getPath());
+        admin.deleteSongs(path, deleteSong);
+    }
     
     public void playlistAuswahlClicked()
     {
@@ -770,13 +847,21 @@ public class Main extends Application
  		 return tabellen;
     }
 
-    // Wird im Moment noch nicht verwendet --- Funktion eventuell für automatisches Erstellen aller Songs
-    public ObservableList<Tabelle> getPlaylist(ObservableList<Tabelle> path) throws IOException, TagException
+    // Funktion Songs
+    public ObservableList<Tabelle> getPlaylist(String playlistName) throws IOException, TagException
     {
-//        TitelEinbinden ein = new TitelEinbinden();
-//        ObservableList<Tabelle> playlist = FXCollections.observableArrayList();
-//        playlist.add(ein.einbinden(path));
-        return path;
+        AdminModeApi admin = new AdminModeApi();
+        ObservableList<Tabelle> tabellen = FXCollections.observableArrayList();
+
+        List<Song> ListAllSongs = new ArrayList<Song>();
+        ListAllSongs = admin.generateSongList("./Musik/"+playlistName+".txt");
+        TitelEinbinden eingabe = new TitelEinbinden();
+
+        for (Song current: ListAllSongs)
+        {
+            tabellen.add(eingabe.einbinden(current));
+        }
+        return tabellen;
     }
     
     public String getFilePath(TableView<Tabelle> tabelleView)

@@ -1,5 +1,6 @@
 package application;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -34,6 +35,7 @@ public class AlertBox
         VBox layout = new VBox(10);
         layout.getChildren().addAll(label, closeButton);
         layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(5,5,5,5));
 
         //Display window and wait for it to be closed before returning
         Scene scene = new Scene(layout);
@@ -74,6 +76,7 @@ public class AlertBox
         VBox layout = new VBox(10);
         layout.getChildren().addAll(label, genre, subLayout);
         layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(5,5,5,5));
 
         //Display window and wait for it to be closed before returning
         Scene scene = new Scene(layout);
@@ -111,6 +114,7 @@ public class AlertBox
         VBox layout = new VBox(10);
         layout.getChildren().addAll(label, interpret, subLayout);
         layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(5,5,5,5));
 
         //Display window and wait for it to be closed before returning
         Scene scene = new Scene(layout);
