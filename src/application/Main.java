@@ -716,7 +716,7 @@ public class Main extends Application
     	}
     	else
     	{
-    		/* Some weird ass shhit like printing out "you'r maaaaaa!" */
+    		/* Some weird ass shhit like printing out "RAWR like a little Tiger" */
     	}
     }
     
