@@ -525,8 +525,6 @@ public class Main extends Application
 //        	pathForPlay = playlist2.getSelectionModel().getSelectedItem().getPath();
 //        }
 
-        if (pathForPlay != null)
-        {
 //        Media media = new Media(new File(pathForPlay).toURI().toString());
 //        MediaPlayer mediaPlayer = new MediaPlayer(media);
 //        mediaPlayer.setAutoPlay(false);
@@ -536,21 +534,15 @@ public class Main extends Application
         play.setOnAction(event -> {
         	if(marianAusw==1)
             {
-            	System.out.println(playlist1.getSelectionModel().getSelectedItem().getPath());
-            	playlist1.setOnMouseClicked(e -> {
-            		pathForPlay = playlist1.getSelectionModel().getSelectedItem().getPath();
-            		System.out.println(playlist1.getSelectionModel().getSelectedItem().getPath()); //TODO Hier weiter versuchen den Path zu bekommen
-            	});
+        		pathForPlay = playlist1.getSelectionModel().getSelectedItem().getPath();
             }
             else if (marianAusw == 2)
             {
-            	playlist1.setOnMouseClicked(e -> {
-            		pathForPlay = playlist2.getSelectionModel().getSelectedItem().getPath();
-            	});
-            }
-            else if (pl3)
-            {
             	pathForPlay = playlist2.getSelectionModel().getSelectedItem().getPath();
+            }
+            else if (marianAusw == 3)
+            {
+            	pathForPlay = playlist3.getSelectionModel().getSelectedItem().getPath();
             }
         	
         	Media media = new Media(new File(pathForPlay).toURI().toString());
@@ -581,7 +573,6 @@ public class Main extends Application
          * MediaPlayer Ende
          *
          * */
-        }
         //Layout setzen
         VBox labelLayout = new VBox(10);
         labelLayout.getChildren().addAll(labelBenutzermodus,button2);
