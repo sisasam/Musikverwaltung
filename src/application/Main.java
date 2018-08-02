@@ -821,7 +821,6 @@ public class Main extends Application
                     new FileChooser.ExtensionFilter("MP3", "*.mp3")
                 );
     		}
-
     //Löschen Button
     public void deleteButtonClicked() throws IOException ,TagException
     {
