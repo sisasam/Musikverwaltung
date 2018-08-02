@@ -48,6 +48,7 @@ public class Main extends Application
     Text MD;
     boolean pl1,pl2,pl3;
     int marianAusw;
+    String pathForPlay;
 
 
 	@Override
@@ -163,7 +164,7 @@ public class Main extends Application
         
         playlist1 = new TableView<>();
         TS.setting(playlist1);
-        playlist1.setItems(getTabelle());
+        playlist1.setItems(getTabelle()); //TODO komplette Musikdatenbank in erster Playlist
         playlist2 = new TableView<>();
         TS.setting(playlist2);
         playlist3 = new TableView<>();
@@ -356,26 +357,40 @@ public class Main extends Application
         		"Playlist 2",
         		"Playlist 3"
         		);
-        
-        if (playListView.getSelectionModel().getSelectedItem() == "Playlist 1")
-        {
-        	marianAusw = 1;
-        }
-        else if (playListView.getSelectionModel().getSelectedItem() == "Playlist 2")
-        {
-        	marianAusw = 2;
-        }
-        else if (playListView.getSelectionModel().getSelectedItem() == "Playlist 3")
-        {
-        	marianAusw = 3;
-        }
+        playListView.setOnMouseClicked(e ->{
+        	 if (playListView.getSelectionModel().getSelectedItem() == "Playlist 1")
+             {
+             	marianAusw = 1;
+             }
+             else if (playListView.getSelectionModel().getSelectedItem() == "Playlist 2")
+             {
+             	marianAusw = 2;
+             }
+             else if (playListView.getSelectionModel().getSelectedItem() == "Playlist 3")
+             {
+             	marianAusw = 3;
+             }
+        });
+       
+        //Mittige Tabelle für Abspielinformationen
+        VBox abspielInformationen = new VBox();
+        //Label Tabelle
+        Label aktPlaylistLabel = new Label("Aktuelle Playlist");
+        aktPlaylistLabel.setFont(new Font(20));
+        aktPlaylistLabel.setMinSize(20,20);
+        //Tabelle zentriert
+//        TableView<Tabelle> aktuellePlaylistTabelle = new TableView<>();
+        abspielInformationen.setPadding(new Insets(10,10,10,10));
+//        aktuellePlaylistTabelle.setItems(getTabelle()); //TODO noch setItems vervollständigen //Von Tore rausgenommen
+        abspielInformationen.getChildren().addAll(aktPlaylistLabel/*TEST,aktuellePlaylistTabelle TEST*/);
 /////////////////////////////////////////////////////////////////////////////////// VON TORE ENDE
         //Button für Playlist
-        TableView<Tabelle> aktuellePlaylistTabelle = new TableView<>();
+//        TableView<Tabelle> aktuellePlaylistTabelle = new TableView<>(); //von Tore rausgenommen dafür die Zeile 379
         playlistAuswahl = new Button("Playlist verwenden");
         playlistAuswahl.setOnAction(event -> {
 /////////////////////////////////////////////////////////////////////////////////// VON TORE ANFANG //TODO abspielinformationen nach vorne holen
         	auswahl(marianAusw, abspielInformationen);
+        	System.out.println(marianAusw);
 /////////////////////////////////////////////////////////////////////////////////// VON TORE ENDE
 //            String penis = playListView.getSelectionModel().getSelectedItem();
 //            try
@@ -417,32 +432,51 @@ public class Main extends Application
         Button skipForward = new Button("Nächster");
         playerSteuerung.getChildren().addAll(skipBack,stop,play,skipForward);
 
-        //Mittige Tabelle für Abspielinformationen
-        VBox abspielInformationen = new VBox(2);
-        //Label Tabelle
-        Label aktPlaylistLabel = new Label("Aktuelle Playlist");
-        aktPlaylistLabel.setFont(new Font(20));
-        aktPlaylistLabel.setMinSize(20,20);
-        //Tabelle zentriert
-       // TableView<Tabelle> aktuellePlaylistTabelle = new TableView<>();
-        TS.setting(aktuellePlaylistTabelle);
-        abspielInformationen.setPadding(new Insets(10,10,10,10));
-        aktuellePlaylistTabelle.setItems(getTabelle()); //TODO noch setItems vervollständigen
-        abspielInformationen.getChildren().addAll(aktPlaylistLabel,aktuellePlaylistTabelle);
+//        //Mittige Tabelle für Abspielinformationen
+//        VBox abspielInformationen = new VBox(2);
+//        //Label Tabelle
+//        Label aktPlaylistLabel = new Label("Aktuelle Playlist");
+//        aktPlaylistLabel.setFont(new Font(20));
+//        aktPlaylistLabel.setMinSize(20,20);
+//        //Tabelle zentriert
+//       // TableView<Tabelle> aktuellePlaylistTabelle = new TableView<>();
+//        TS.setting(aktuellePlaylistTabelle);
+//        abspielInformationen.setPadding(new Insets(10,10,10,10));
+//        aktuellePlaylistTabelle.setItems(getTabelle()); //TODO noch setItems vervollständigen
+//        abspielInformationen.getChildren().addAll(aktPlaylistLabel,aktuellePlaylistTabelle);
         /*
         * MediaPlayer
         *
         *
         * */
-        String path = "./Musik/Mild_Way.mp3"/*"/Users/mariangeissler/Desktop/ets.mp3"*/; //TODO mit Richy's Funktion ersetzen
-        Media media = new Media(new File(path).toURI().toString());
+        pathForPlay = "";
+        if(pl1)
+        {
+        	playlist1.setOnMouseClicked(e -> {
+        		pathForPlay = playlist1.getSelectionModel().getSelectedItem().getPath();
+        	});
+        	 //TODO mit Richy's Funktion ersetzen
+        }
+        else if (pl2)
+        {
+        	playlist1.setOnMouseClicked(e -> {
+        		pathForPlay = playlist2.getSelectionModel().getSelectedItem().getPath();
+        	});
+        }
+        else if (pl3)
+        {
+        	pathForPlay = playlist2.getSelectionModel().getSelectedItem().getPath();
+        }
+        if (pathForPlay != "")
+        {
+        Media media = new Media(new File(pathForPlay).toURI().toString());
 
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setAutoPlay(false);
         MediaView mediaView = new MediaView(mediaPlayer);
         //Player testSong1 = new Player("/Users/mariangeissler/Desktop/ets.mp3");
         //Play mit Funktion versehen
-
+        
         play.setOnAction(event -> {
             if ("Pause".equals(play.getText()))
             {
@@ -459,9 +493,10 @@ public class Main extends Application
             mediaView.getMediaPlayer().stop();
             play.setText("Abspielen");
         });
-
+        
         //Player im Layout setzen
         playerLayout.setCenter(mediaView);
+        } //Von Tore
         /*
          * MediaPlayer Ende
          *
