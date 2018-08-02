@@ -114,7 +114,22 @@ public class Main extends Application
         //Für die Auswahl der Playlist nach Genre
 
         Button deleteButton = new Button("Löschen");
-        deleteButton.setOnAction(e -> deleteButtonClicked());
+        deleteButton.setOnAction(e -> {
+			try
+			{
+				deleteButtonClicked();
+			}
+			catch (IOException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			catch (TagException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
         Button bModButton = new Button("Zum Benutzermodus");    //Um in Benutzer zu gelangen = bMod
         bModButton.setOnAction(e -> window.setScene(benutzerModus));
         Button inDiePlaylist = new Button("In die Playlist");
@@ -164,7 +179,7 @@ public class Main extends Application
         
         playlist1 = new TableView<>();
         TS.setting(playlist1);
-        playlist1.setItems(getTabelle()); //TODO komplette Musikdatenbank in erster Playlist
+        playlist1.setItems(getTabelle());
         playlist2 = new TableView<>();
         TS.setting(playlist2);
         playlist3 = new TableView<>();
@@ -452,10 +467,11 @@ public class Main extends Application
         pathForPlay = "";
         if(pl1)
         {
+        	System.out.println(playlist1.getSelectionModel().getSelectedItem().getPath());
         	playlist1.setOnMouseClicked(e -> {
         		pathForPlay = playlist1.getSelectionModel().getSelectedItem().getPath();
+        		System.out.println(playlist1.getSelectionModel().getSelectedItem().getPath()); //TODO Hier weiter versuchen den Path zu bekommen
         	});
-        	 //TODO mit Richy's Funktion ersetzen
         }
         else if (pl2)
         {
@@ -467,16 +483,16 @@ public class Main extends Application
         {
         	pathForPlay = playlist2.getSelectionModel().getSelectedItem().getPath();
         }
+        
+        System.out.println(pathForPlay);
         if (pathForPlay != "")
         {
         Media media = new Media(new File(pathForPlay).toURI().toString());
-
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setAutoPlay(false);
         MediaView mediaView = new MediaView(mediaPlayer);
         //Player testSong1 = new Player("/Users/mariangeissler/Desktop/ets.mp3");
         //Play mit Funktion versehen
-        
         play.setOnAction(event -> {
             if ("Pause".equals(play.getText()))
             {
@@ -496,11 +512,11 @@ public class Main extends Application
         
         //Player im Layout setzen
         playerLayout.setCenter(mediaView);
-        } //Von Tore
         /*
          * MediaPlayer Ende
          *
          * */
+        }
         //Layout setzen
         playerLayout.setCenter(abspielInformationen);
         playerLayout.setLeft(modLayout2);
@@ -677,7 +693,6 @@ public class Main extends Application
 
 	        Tabellenelected.forEach(allTabellen::remove);
 		}
-		
 	}
 
 	//Hinzufügen Button
@@ -686,6 +701,8 @@ public class Main extends Application
 	 */
     public void addButtonClicked() throws IOException, TagException
     {
+    	AdminModeApi admin = new AdminModeApi();
+    	List<String> filePath = new ArrayList<String>();
     	FileChooser fc = new FileChooser();
     	configureFileChooser(fc);
     	File selectedFile = fc.showOpenDialog(null);
@@ -694,6 +711,8 @@ public class Main extends Application
     	{
     		TitelEinbinden eingabe = new TitelEinbinden();
     		neuTabelle.getItems().add(eingabe.einbinden(selectedFile.getAbsolutePath()));
+    		filePath.add(selectedFile.getAbsolutePath());
+    		admin.addSongs(filePath, "./Musik/admin.txt", true);
     	}
     	else
     	{
@@ -715,7 +734,7 @@ public class Main extends Application
     		}
 
     //Löschen Button
-    public void deleteButtonClicked()
+    public void deleteButtonClicked() throws IOException ,TagException
     {
         ObservableList<Tabelle> Tabellenelected, allTabellen;
         allTabellen = neuTabelle.getItems();
@@ -723,8 +742,9 @@ public class Main extends Application
 
         Tabellenelected.forEach(allTabellen::remove);
         AdminModeApi admin = new AdminModeApi();
-       //still TODO admin.deleteSongs("./Musik/admin.txt", filepathesToDelete);
-        
+        List<String> deleteSong = new ArrayList<String>();
+        deleteSong.add(neuTabelle.getSelectionModel().getSelectedItem().getPath());
+        admin.deleteSongs("./Musik/admin.txt", deleteSong);
     }
     
     public void playlistAuswahlClicked()
