@@ -38,6 +38,8 @@ public class Main extends Application
     boolean pl1,pl2,pl3;
     int marianAusw;
     String pathForPlay;
+    File file;
+    Player music;
 
 
 	@Override
@@ -169,7 +171,20 @@ public class Main extends Application
         });
         */
         ausDerPlaylist.setOnAction(e ->{
-            ausDerPlaylistClicked();
+            try
+			{
+				ausDerPlaylistClicked();
+			}
+			catch (IOException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			catch (TagException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
         });
         Button genrePlay = new Button("Genre");
         genrePlay.setOnAction(e -> {
@@ -488,6 +503,8 @@ public class Main extends Application
         Button skipForward = new Button("Nächster");
         playerSteuerung.getChildren().addAll(skipBack,stop,play,skipForward);
 
+        
+        ////////////////////////////////////////////////////////////////////////////////////
 //        //Mittige Tabelle für Abspielinformationen
 //        VBox abspielInformationen = new VBox(2);
 //        //Label Tabelle
@@ -531,7 +548,16 @@ public class Main extends Application
 //        MediaView mediaView = new MediaView(mediaPlayer);
         //Player testSong1 = new Player("/Users/mariangeissler/Desktop/ets.mp3");
         //Play mit Funktion versehen
+        
+        
+        
+        
+        /////////////////////////////////////////////////////////////
+        
         play.setOnAction(event -> {
+        	
+        	System.out.println(pathForPlay);
+        	//////////////////////So halbwegs ANFANG
         	if(marianAusw==1)
             {
         		pathForPlay = playlist1.getSelectionModel().getSelectedItem().getPath();
@@ -544,26 +570,31 @@ public class Main extends Application
             {
             	pathForPlay = playlist3.getSelectionModel().getSelectedItem().getPath();
             }
+//        	Media media = new Media(new File(pathForPlay).toURI().toString());
+//            MediaPlayer mediaPlayer = new MediaPlayer(media);
+//            mediaPlayer.setAutoPlay(false);
+//            MediaView mediaView = new MediaView(mediaPlayer);
+//            
         	
-        	Media media = new Media(new File(pathForPlay).toURI().toString());
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setAutoPlay(false);
-            MediaView mediaView = new MediaView(mediaPlayer);
-            
             
             if ("Pause".equals(play.getText()))
             {
-                mediaView.getMediaPlayer().pause();
+//            	musicPlayer(3 , pathForPlay); //neue Methode
+                music.mediaPlayer.pause();//.getMediaPlayer().pause();
                 play.setText("Abspielen");
             } else {
-                mediaView.getMediaPlayer().play();
-                mediaPlayer.play();
+            	music = new Player(pathForPlay);
+                music.mediaPlayer.play();//mediaView.getMediaPlayer().play();
+//                mediaPlayer.play();
                 play.setText("Pause");
+//                musicPlayer(1, pathForPlay); //neue Methode
             }
+            //////////////////////So halbwegs ENDE
             });
         //Stop mit Funktion versehen
         stop.setOnAction(event -> {
-//            mediaView.getMediaPlayer().stop();
+//        	musicPlayer(2, pathForPlay);
+            music.mediaPlayer.stop();//mediaView.getMediaPlayer().stop();
             play.setText("Abspielen");
         });
         
@@ -593,6 +624,26 @@ public class Main extends Application
         mainLayout.setStyle("-fx-background-color: CED6DB");
     }
 	
+//	private void musicPlayer(int fkt, String pathForPlay)
+//	{
+//
+//		if (fkt == 3) //Pause
+//		{
+//			mediaView.getMediaPlayer().pause();
+//			//play.setText("Abspielen");
+//		}
+//		if (fkt == 1) //Play
+//		{
+//			mediaView.getMediaPlayer().play();
+//			mediaPlayer.play();
+//			//play.setText("Pause");
+//		}
+//		if (fkt == 2) //Stop
+//		{
+//			mediaView.getMediaPlayer().stop();
+//		}
+//	}
+
 	//Checks if first line is empty
 	private boolean fileEmpty() throws IOException, TagException 
 	{
@@ -629,6 +680,11 @@ public class Main extends Application
         } 
         else 
         {
+        	if(!dir.isDirectory())
+        	{
+        		AlertBox fehler = new AlertBox();
+        		fehler.display("FEHLER", "Directory Not Found");//TODO Hier weiter machen
+        	}
           // Handle the case where dir is not really a directory.
           // Checking dir.isDirectory() above would not be sufficient
           // to avoid race conditions with another process that deletes
@@ -727,7 +783,7 @@ public class Main extends Application
         }
 	}
 
-	private void ausDerPlaylistClicked()
+	private void ausDerPlaylistClicked() throws IOException, TagException
 	{
 		// TODO Abfangen des Falles, das die Playlist leer ist.
 		if(pl1)
@@ -740,26 +796,10 @@ public class Main extends Application
 		}
 		else if(pl2)
 		{
-			ObservableList<Tabelle> Tabellenelected, allTabellen;
-	        allTabellen = playlist2.getItems();
-	        Tabellenelected = playlist2.getSelectionModel().getSelectedItems();
-            try
-            {
                 deleteButtonClicked(playlist2,"./Musik/playlist2.txt");
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-            } catch (TagException e)
-            {
-                e.printStackTrace();
-            }
-            Tabellenelected.forEach(allTabellen::remove);
 		}
 		else if(pl3)
 		{
-			ObservableList<Tabelle> Tabellenelected, allTabellen;
-	        allTabellen = playlist3.getItems();
-	        Tabellenelected = playlist3.getSelectionModel().getSelectedItems();
             try
             {
                 deleteButtonClicked(playlist3,"./Musik/playlist3.txt");
@@ -770,15 +810,10 @@ public class Main extends Application
             {
                 e.printStackTrace();
             }
-
-            Tabellenelected.forEach(allTabellen::remove);
 		}
 	}
 
 	//Hinzufügen Button
-	/*
-	 * Man kann hier mit der If Abfrage noch einfügen, dass er das leere Feld rot highlighted !
-	 */
     public void addButtonClicked() throws IOException, TagException
     {
     	AdminModeApi admin = new AdminModeApi();
@@ -793,10 +828,6 @@ public class Main extends Application
     		neuTabelle.getItems().add(eingabe.einbinden(selectedFile.getAbsolutePath()));
     		filePath.add(selectedFile.getAbsolutePath());
     		admin.addSongs(filePath, "./Musik/admin.txt", true);
-    	}
-    	else
-    	{
-    		/* Some weird ass shhit like printing out "RAWR like a little Tiger" */
     	}
     }
     
