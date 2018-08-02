@@ -121,7 +121,7 @@ public class Main extends Application
 		});
         Button bModButton = new Button("Zum Benutzermodus");    //Um in Benutzer zu gelangen = bMod
         bModButton.setOnAction(e -> window.setScene(benutzerModus));
-        Button inDiePlaylist = new Button("In die Playlist");
+        Button  inDiePlaylist = new Button("In die Playlist");
         inDiePlaylist.setOnAction(e -> {
             List<String> uebergabePath = new ArrayList<String>();
             uebergabePath.add(neuTabelle.getSelectionModel().getSelectedItem().getPath());
@@ -219,12 +219,12 @@ public class Main extends Application
         playlistAusw.setPromptText("Wählen Sie eine Playlist aus.");
 
         //Layout für die Tabelle
-        VBox tabLayout = new VBox();
+        VBox tabLayout = new VBox(10);
         tabLayout.getChildren().addAll(MD, neuTabelle);
         tabLayout.setPadding(new Insets(10,10,10,10));
         
         //Layout für die Playlist
-        VBox plLayout = new VBox();
+        VBox plLayout = new VBox(10);
         plLayout.getChildren().addAll(playlistAusw);
         plLayout.setPadding(new Insets(10,10,10,10));
         
@@ -338,7 +338,7 @@ public class Main extends Application
         labelVerwaltungsmodus.setFont(new Font(20));
         VBox modLayout = new VBox(10);
         modLayout.getChildren().addAll(labelVerwaltungsmodus,bModButton);
-        modLayout.setPadding(new Insets(5, 5, 5, 5));
+        modLayout.setPadding(new Insets(10,10,10,10));
         
         VBox playlistSwitcher = new VBox();
         playlistSwitcher.getChildren().addAll(ausDerPlaylist, inDiePlaylist);
@@ -371,7 +371,7 @@ public class Main extends Application
         mainLayout.setCenter(playlistLayout);
 
         verwaltungsModus = new Scene(mainLayout,1024,600);
-        
+
 
         //Starten im Verwaltungsmodus
         window.setScene(verwaltungsModus);
@@ -478,7 +478,7 @@ public class Main extends Application
 
         //Playaerelemente in horizontaler Anordnung
         HBox playerSteuerung = new HBox(40);
-        playerSteuerung.setPadding(new Insets(5, 5, 5, 5));
+        playerSteuerung.setPadding(new Insets(10, 10, 10, 10));
         playerSteuerung.setAlignment(Pos.CENTER);
         playerSteuerung.alignmentProperty().isBound();
         //Player buttons
@@ -561,7 +561,7 @@ public class Main extends Application
         //Layout setzen
         VBox labelLayout = new VBox(10);
         labelLayout.getChildren().addAll(labelBenutzermodus,button2);
-        labelLayout.setPadding(new Insets(5,5,5,5));
+        labelLayout.setPadding(new Insets(10,10,10,10));
         playerLayout.setCenter(abspielInformationen);
         playerLayout.setTop(labelLayout);
         playerLayout.setLeft(modLayout2);
@@ -574,7 +574,8 @@ public class Main extends Application
         *
         * Benutzermodus Ende
         */
-
+        playerLayout.setStyle("-fx-background-color: CED6DB");
+        mainLayout.setStyle("-fx-background-color: CED6DB");
     }
 	
 	//Checks if first line is empty
