@@ -505,36 +505,60 @@ public class Main extends Application
         *
         *
         * */
-        pathForPlay = "";
-        if(pl1)
+        //pathForPlay = "";
+//        if(marianAusw==1)
+//        {
+//        	System.out.println(playlist1.getSelectionModel().getSelectedItem().getPath());
+//        	playlist1.setOnMouseClicked(e -> {
+//        		pathForPlay = playlist1.getSelectionModel().getSelectedItem().getPath();
+//        		System.out.println(playlist1.getSelectionModel().getSelectedItem().getPath()); //TODO Hier weiter versuchen den Path zu bekommen
+//        	});
+//        }
+//        else if (marianAusw == 2)
+//        {
+//        	playlist1.setOnMouseClicked(e -> {
+//        		pathForPlay = playlist2.getSelectionModel().getSelectedItem().getPath();
+//        	});
+//        }
+//        else if (pl3)
+//        {
+//        	pathForPlay = playlist2.getSelectionModel().getSelectedItem().getPath();
+//        }
+
+        if (pathForPlay != null)
         {
-        	System.out.println(playlist1.getSelectionModel().getSelectedItem().getPath());
-        	playlist1.setOnMouseClicked(e -> {
-        		pathForPlay = playlist1.getSelectionModel().getSelectedItem().getPath();
-        		System.out.println(playlist1.getSelectionModel().getSelectedItem().getPath()); //TODO Hier weiter versuchen den Path zu bekommen
-        	});
-        }
-        else if (pl2)
-        {
-        	playlist1.setOnMouseClicked(e -> {
-        		pathForPlay = playlist2.getSelectionModel().getSelectedItem().getPath();
-        	});
-        }
-        else if (pl3)
-        {
-        	pathForPlay = playlist2.getSelectionModel().getSelectedItem().getPath();
-        }
-        
-        System.out.println(pathForPlay);
-        if (pathForPlay != "")
-        {
-        Media media = new Media(new File(pathForPlay).toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setAutoPlay(false);
-        MediaView mediaView = new MediaView(mediaPlayer);
+//        Media media = new Media(new File(pathForPlay).toURI().toString());
+//        MediaPlayer mediaPlayer = new MediaPlayer(media);
+//        mediaPlayer.setAutoPlay(false);
+//        MediaView mediaView = new MediaView(mediaPlayer);
         //Player testSong1 = new Player("/Users/mariangeissler/Desktop/ets.mp3");
         //Play mit Funktion versehen
         play.setOnAction(event -> {
+        	if(marianAusw==1)
+            {
+            	System.out.println(playlist1.getSelectionModel().getSelectedItem().getPath());
+            	playlist1.setOnMouseClicked(e -> {
+            		pathForPlay = playlist1.getSelectionModel().getSelectedItem().getPath();
+            		System.out.println(playlist1.getSelectionModel().getSelectedItem().getPath()); //TODO Hier weiter versuchen den Path zu bekommen
+            	});
+            }
+            else if (marianAusw == 2)
+            {
+            	playlist1.setOnMouseClicked(e -> {
+            		pathForPlay = playlist2.getSelectionModel().getSelectedItem().getPath();
+            	});
+            }
+            else if (pl3)
+            {
+            	pathForPlay = playlist2.getSelectionModel().getSelectedItem().getPath();
+            }
+        	
+        	Media media = new Media(new File(pathForPlay).toURI().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setAutoPlay(false);
+            MediaView mediaView = new MediaView(mediaPlayer);
+            
+            
             if ("Pause".equals(play.getText()))
             {
                 mediaView.getMediaPlayer().pause();
@@ -547,12 +571,12 @@ public class Main extends Application
             });
         //Stop mit Funktion versehen
         stop.setOnAction(event -> {
-            mediaView.getMediaPlayer().stop();
+//            mediaView.getMediaPlayer().stop();
             play.setText("Abspielen");
         });
         
         //Player im Layout setzen
-        playerLayout.setCenter(mediaView);
+//        playerLayout.setCenter(mediaView);
         /*
          * MediaPlayer Ende
          *
@@ -781,7 +805,7 @@ public class Main extends Application
     	}
     	else
     	{
-    		/* Some weird ass shhit like printing out "you'r maaaaaa!" */
+    		/* Some weird ass shhit like printing out "RAWR like a little Tiger" */
     	}
     }
     
